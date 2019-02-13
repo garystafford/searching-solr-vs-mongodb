@@ -9,7 +9,7 @@
 import pymongo
 import os
 
-mongodb_conn = os.environ.get('MONGODB_CONN')
+mongodb_conn = os.environ.get('MONOGDB_CONN')
 mongodb_client = pymongo.MongoClient(mongodb_conn)
 mongo_db = mongodb_client["movies"]
 mongo_collection = mongo_db["movieDetails"]
@@ -23,7 +23,7 @@ def create_indexes():
                                    ("plot", pymongo.TEXT)])
 
 
-def find_documents(query, projection={'title': 1}, sort=[('title', 1)]):
+def find_documents(query, projection={'title': 1}, sort=[('title', pymongo.ASCENDING)]):
     # https://docs.mongodb.com/manual/reference/method/db.collection.find/
 
     documents = mongo_collection \
@@ -35,8 +35,8 @@ def find_documents(query, projection={'title': 1}, sort=[('title', 1)]):
     print("query: %s" % query)
     print("projection: %s" % projection)
     print("count: %s" % documents.count())
-    for d in documents:
-        print d
+    for document in documents:
+        print (document)
 
 
 def search_documents(query, projection={'score': {'$meta': 'textScore'}, 'title': 1},
@@ -52,8 +52,8 @@ def search_documents(query, projection={'score': {'$meta': 'textScore'}, 'title'
     print("query: %s" % query)
     print("projection: %s" % projection)
     print("count: %s" % documents.count())
-    for d in documents:
-        print d
+    for document in documents:
+        print (document)
 
 
 create_indexes()
