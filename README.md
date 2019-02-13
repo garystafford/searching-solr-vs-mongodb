@@ -27,10 +27,10 @@ export SOLR_URL="http://{{ host }}:8983/solr"
 export MONOGDB_CONN="mongodb+srv://{{ user }}:{{ password }}@{{ host }}/admin"
 ```
 
-Import JSON data to MongoDB
+Import `movieDetails_mongo.json` JSON data to MongoDB
 
 ```bash
-time mongoimport \
+mongoimport \
   --uri $MONOGDB_CONN \
   --collection "movieDetails" \
   --drop --file "data/movieDetails_mongo.json"
