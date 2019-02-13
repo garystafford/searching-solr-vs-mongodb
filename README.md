@@ -6,15 +6,15 @@ Materials for workshop on comparing searching with Apache Solr versus querying i
 
 Assuming you have an existing MongoDB and Solr instances:
 
--   Import JSON data to MongoDB (`data/movieDetails_mongo.json`)
--   Create Solr collection (command line)
+-   Import JSON data to MongoDB (command below)
+-   Create Solr `movies` collection (command below)
 -   Import JSON data to Solr (Python script: `solr_import.py`)
--   Set (2) environment variables
--   Run `query_mongo.py` and `query_solr.py`
+-   Set (2) environment variables (commands below)
+-   Run `query_mongo.py` and `query_solr.py` query scripts
 
 ## Useful Commands
 
-Create collection on Solr VM
+Create Solr `movies` collection
 
 ```bash
 solr-7.6.0/bin/solr create -c movies -s 2 -rf 2
