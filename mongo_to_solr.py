@@ -56,21 +56,6 @@ def add_each():
         print("add all status: ", r.status_code, r.reason, r.url, r.content)
 
 
-# Delete all documents in Solr
-def delete_all():
-    # https://wiki.apache.org/solr/FAQ
-    path = "/update"
-    headers = {'Content-type': 'text/xml', 'charset': 'utf-8'}
-
-    raw_data = "<delete><query>*:*</query></delete>"
-    r = requests.post(solr_url + "/" + solr_collection + path, data=raw_data, headers=headers)
-    print("delete status: ", r.status_code, r.reason, r.url, r.content)
-
-    raw_data = "<commit/>"
-    r = requests.post(solr_url + "/" + solr_collection + path, data=raw_data, headers=headers)
-    print("commit status: ", r.status_code, r.reason, r.url, r.content)
-
-
 # def create_collection():
 #     # ** THIS DOESN'T WORK **
 #     # https://lucene.apache.org/solr/guide/7_6/collections-api.html
@@ -85,19 +70,6 @@ def delete_all():
 #     print("commit status: ", r.status_code, r.reason, r.url, r.content)
 
 
-# Load JSON file documents into Solr
-def load_json():
-    with open('data/movieDetails.json') as json_data:
-        json_data = json.load(json_data)
-
-    path = "/update/json/docs?commit=true"
-
-    # print("documents to add: ", dumps(json_data))
-
-    r = requests.post(solr_url + "/" + solr_collection + path, data=dumps(json_data))
-    print("add all status: ", r.status_code, r.reason)
-
-
 # Change schema items to multiValued = falses
 def multi_value_false():
     path = "/schema"
@@ -110,7 +82,5 @@ def multi_value_false():
 
 # create_collection()
 multi_value_false()
-# delete_all()
-# load_json()
 # add_all()
 # add_each()

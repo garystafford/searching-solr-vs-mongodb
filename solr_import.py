@@ -29,7 +29,7 @@ def delete_all():
     print("commit status: ", r.status_code, r.reason)
 
 
-def load_json():
+def load_json_file_to_solr():
     with open(data_file) as data:
         json_data = json.load(data)
 
@@ -39,4 +39,4 @@ def load_json():
 
 
 delete_all()
-load_json()
+load_json_file_to_solr()
