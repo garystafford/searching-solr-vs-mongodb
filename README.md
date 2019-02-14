@@ -22,7 +22,7 @@ Create Solr `movies` collection
 solr-7.6.0/bin/solr create -c movies -s 2 -rf 2
 ```
 
-Set environment variables
+Update environment variables with your own values and set
 
 ```bash
 export SOLR_URL="http://{{ host }}:8983/solr"
