@@ -38,6 +38,88 @@ mongoimport \
   --drop --file "data/movieDetails_mongo.json"
 ```
 
+## Output from Solr Searches
+Actually documents are not shown for brevity.
+
+```text
+---
+solr_search q: *:*
+solr_search hits: 2250
+solr_search qtime (ms): 3
+---
+solr_search q: "Star Wars: Episode V - The Empire Strikes Back"
+solr_search hits: 1
+solr_search qtime (ms): 2
+---
+solr_search q: "star wars"
+solr_search hits: 6
+solr_search qtime (ms): 1
+---
+solr_search q: star wars
+solr_search hits: 15
+solr_search qtime (ms): 1
+---
+solr_search q: *star* *wars*
+solr_search hits: 20
+solr_search qtime (ms): 3
+---
+solr_search q: "star wars" OR "star trek"
+solr_search hits: 11
+solr_search qtime (ms): 1
+---
+solr_search q: western action adventure
+solr_search hits: 24
+solr_search qtime (ms): 1
+---
+solr_search q: "adventure"
+solr_search hits: 11
+solr_search qtime (ms): 1
+---
+solr_search q: western action adventure
+solr_search hits: 24
+solr_search qtime (ms): 1
+---
+solr_search q: *western* *action* *adventure*
+solr_search hits: 452
+solr_search qtime (ms): 19
+---
+solr_search q: actors:"John Wayne" AND western action adventure
+solr_search hits: 3
+solr_search qtime (ms): 2
+---
+solr_search q: western action adventure with John Wayne
+solr_search hits: 793
+solr_search qtime (ms): 2
+---
+solr_search q: western action adventure +"John Wayne"
+solr_search hits: 4
+solr_search qtime (ms): 1
+---
+solr_search q: western action adventure
+solr_search hits: 434
+solr_search qtime (ms): 2
+---
+solr_search q: classic western action adventure adventure
+solr_search hits: 438
+solr_search qtime (ms): 2
+---
+solr_search q: classic western action adventure adventure
+solr_search hits: 438
+solr_search qtime (ms): 1
+---
+solr_search q: {!mlt qf="director writers" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
+solr_search hits: 53
+solr_search qtime (ms): 7
+---
+solr_search q: {!mlt qf="actors" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
+solr_search hits: 77
+solr_search qtime (ms): 5
+---
+solr_search q: {!mlt qf="genres" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
+solr_search hits: 440
+solr_search qtime (ms): 4
+```
+
 ## References
 
 <https://lucene.apache.org/solr/guide/7_6/common-query-parameters.html>
