@@ -173,8 +173,6 @@ count: 444
 ---
 query: {'$text': {'$search': 'western action adventure'}}
 projection: {'score': {'$meta': 'textScore'}, 'title': 1}
-./query_mongo.py:54: DeprecationWarning: count is deprecated. Use Collection.count_documents instead.
-  print("count: %s" % documents.count())
 count: 444
 ```
 
