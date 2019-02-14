@@ -27,7 +27,7 @@ def find_documents(query, projection={'title': 1}, sort=[('title', pymongo.ASCEN
     documents = mongo_collection \
         .find(query, projection) \
         .sort(sort) \
-        .limit(5)
+        .limit(10)
 
     print("---")
     # print(documents.explain())
@@ -38,7 +38,7 @@ def find_documents(query, projection={'title': 1}, sort=[('title', pymongo.ASCEN
         print(document)
 
 
-create_indexes()
+# create_indexes()
 
 find_documents({})
 
