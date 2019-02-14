@@ -39,6 +39,7 @@ mongoimport \
 ```
 
 ## Output from Solr Searches
+
 Actually documents are not shown for brevity.
 
 ```text
@@ -118,6 +119,63 @@ solr_search qtime (ms): 5
 solr_search q: {!mlt qf="genres" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
 solr_search hits: 440
 solr_search qtime (ms): 4
+```
+
+## Output from MongoDB Queries
+
+Actually documents are not shown for brevity.
+
+```text
+---
+query: {}
+projection: {'title': 1}
+count: 2250
+---
+query: {'title': 'Star Wars: Episode V - The Empire Strikes Back'}
+projection: {'title': 1}
+count: 1
+---
+query: {'title': {'$regex': '\\bstar wars\\b', '$options': 'i'}}
+projection: {'title': 1}
+count: 6
+---
+query: {'title': {'$regex': '\\bstar\\b|\\bwars\\b', '$options': 'i'}}
+projection: {'title': 1}
+count: 15
+---
+query: {'title': {'$regex': 'star|wars', '$options': 'i'}}
+projection: {'title': 1}
+count: 20
+---
+query: {'title': {'$regex': '\\bstar wars\\b|\\bstar trek\\b', '$options': 'i'}}
+projection: {'title': 1}
+count: 11
+---
+query: {'genres': {'$in': ['Western', 'Action', 'Adventure']}}
+projection: {'title': 1}
+count: 410
+---
+query: {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}}
+projection: {'title': 1}
+count: 53
+---
+query: {'$or': [{'title': {'$regex': '\\bwestern\\b|\\baction\\b|\\adventure\\b', '$options': 'i'}}, {'plot': {'$regex': '\\bwestern\\b|\\baction\\b|\\adventure\\b', '$options': 'i'}}, {'genres': {'$regex': '\\bwestern\\b|\\baction\\b|\\adventure\\b', '$options': 'i'}}]}
+projection: {'title': 1}
+count: 324
+---
+query: {'$or': [{'title': {'$regex': 'western|action|adventure', '$options': 'i'}}, {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}}, {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}]}
+projection: {'title': 1}
+count: 452
+---
+query: {'$text': {'$search': 'western action adventure'}}
+projection: {'title': 1}
+count: 444
+---
+query: {'$text': {'$search': 'western action adventure'}}
+projection: {'score': {'$meta': 'textScore'}, 'title': 1}
+./query_mongo.py:54: DeprecationWarning: count is deprecated. Use Collection.count_documents instead.
+  print("count: %s" % documents.count())
+count: 444
 ```
 
 ## References

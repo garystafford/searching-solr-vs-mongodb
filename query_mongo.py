@@ -36,7 +36,7 @@ def find_documents(query, projection={'title': 1}, sort=[('title', pymongo.ASCEN
     print("projection: %s" % projection)
     print("count: %s" % documents.count())
     for document in documents:
-        print (document)
+        print(document)
 
 
 def search_documents(query, projection={'score': {'$meta': 'textScore'}, 'title': 1},
@@ -53,7 +53,7 @@ def search_documents(query, projection={'score': {'$meta': 'textScore'}, 'title'
     print("projection: %s" % projection)
     print("count: %s" % documents.count())
     for document in documents:
-        print (document)
+        print(document)
 
 
 create_indexes()

@@ -24,7 +24,7 @@ def solr_search(q, kwargs):
     print("solr_search q: %s" % q)
     print("solr_search hits: %s" % results.hits)
     print("solr_search qtime (ms): %s" % results.qtime)
-    # print("solr_search docs: %s" % dumps(results.docs))
+    print("solr_search docs: %s" % dumps(results.docs))
 
 
 # More Like This Query Parser (MLTQParser) example
@@ -35,7 +35,7 @@ def more_like_this_query_parser(q, mltfl):
     print("more_like_this q: %s" % q)
     print("more_like_this hits: %s" % results.hits)
     print("more_like_this qtime (ms): %s" % results.qtime)
-    # print("more_like_this docs: %s" % dumps(results.docs))
+    print("more_like_this docs: %s" % dumps(results.docs))
 
 
 # score is always 1.0 (default)
