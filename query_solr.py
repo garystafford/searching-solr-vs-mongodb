@@ -17,14 +17,14 @@ solr = pysolr.Solr(solr_url + "/" + solr_collection)
 
 
 # Solr's default Query Parser (aka lucene parser)
-def solr_search(q, args):
-    results = solr.search(q, **args)
+def solr_search(q, kwargs):
+    results = solr.search(q, **kwargs)
 
     print("---")
-    print("find_title_contains q: %s" % q)
-    print("find_title_contains hits: %s" % results.hits)
-    print("find_title_contains qtime (ms): %s" % results.qtime)
-    print("find_title_contains docs: %s" % dumps(results.docs))
+    print("solr_search q: %s" % q)
+    print("solr_search hits: %s" % results.hits)
+    print("solr_search qtime (ms): %s" % results.qtime)
+    print("solr_search docs: %s" % dumps(results.docs))
 
 
 # More Like This Query Parser (MLTQParser) example
@@ -46,43 +46,51 @@ solr_search("*:*", {
 
 solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 solr_search("\"star wars\"", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 solr_search("star wars", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 solr_search("*star* *wars*", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 solr_search("\"star wars\" OR \"star trek\"", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 solr_search("western action adventure", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 # why we can't add 'adventure' as a stop word
 solr_search("\"adventure\"", {
     "defType": "lucene",
+    "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
 # Extended DisMax (eDismax) Query Parser - Basic example, no boost
 solr_search("western action adventure", {
-    "defType": "edismax",
+    "defType": "lucene",
+    "df": "title",
     "qf": "plot title genres",
     "fl": "id title genres score",
     "rows": "5"})
@@ -94,12 +102,6 @@ solr_search("*western* *action* *adventure*", {
     "rows": "5"})
 
 # eDismax - Basic example, multiple search terms
-solr_search("*western* *action* *adventure*", {
-    "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
 solr_search("actors:\"John Wayne\" AND western action adventure", {
     "defType": "edismax",
     "qf": "plot title genres actors director",
