@@ -27,6 +27,17 @@ def solr_search(q, kwargs):
     print("solr_search docs: %s" % dumps(results.docs))
 
 
+# More Like This Query Parser (MLTQParser) example
+def more_like_this_query_parser(q, mltfl):
+    results = solr.more_like_this(q, mltfl)
+    # {"fl": "id plot title genres actors director score", "rows": "5"}
+    print("---")
+    print("more_like_this q: %s" % q)
+    print("more_like_this hits: %s" % results.hits)
+    print("more_like_this qtime (ms): %s" % results.qtime)
+    print("more_like_this docs: %s" % dumps(results.docs))
+
+
 # score is always 1.0 (default)
 solr_search("*:*", {
     "defType": "lucene",
@@ -150,3 +161,5 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
     "defType": "lucene",
     "fl": "id plot title genres actors director score",
     "rows": "5"})
+
+# more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")
