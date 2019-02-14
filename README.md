@@ -38,6 +38,14 @@ mongoimport \
   --drop --file "data/movieDetails_mongo.json"
 ```
 
+Run scripts
+
+```bash
+time python3 ./query_mongo.py
+time python3 ./query_solr.py
+
+```
+
 ## Output from Solr Searches
 
 Actually documents are not shown for brevity.
@@ -177,7 +185,8 @@ count: 444
 ```
 
 ## References
-
+<https://wiki.apache.org/solr/SolrRelevancyFAQ>
 <https://lucene.apache.org/solr/guide/7_6/common-query-parameters.html>
 <https://docs.mongodb.com/charts/master/tutorial/movie-details/prereqs-and-import-data/#download-the-data>
 <https://docs.atlas.mongodb.com/import/mongoimport/>
+<https://docs.mongodb.com/manual/reference/method/db.collection.find/>

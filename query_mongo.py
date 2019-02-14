@@ -24,31 +24,13 @@ def create_indexes():
 
 
 def find_documents(query, projection={'title': 1}, sort=[('title', pymongo.ASCENDING)]):
-    # https://docs.mongodb.com/manual/reference/method/db.collection.find/
-
     documents = mongo_collection \
         .find(query, projection) \
         .sort(sort) \
         .limit(5)
 
     print("---")
-    print("query: %s" % query)
-    print("projection: %s" % projection)
-    print("count: %s" % documents.count())
-    for document in documents:
-        print(document)
-
-
-def search_documents(query, projection={'score': {'$meta': 'textScore'}, 'title': 1},
-                     sort=[('score', {'$meta': 'textScore'})]):
-    # https://docs.mongodb.com/manual/text-search/
-
-    documents = mongo_collection \
-        .find(query, projection) \
-        .sort(sort) \
-        .limit(5)
-
-    print("---")
+    # print(documents.explain())
     print("query: %s" % query)
     print("projection: %s" % projection)
     print("count: %s" % documents.count())
@@ -82,6 +64,8 @@ find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$optio
                         {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}},
                         {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}]})
 
-find_documents({'$text': {'$search': 'western action adventure'}})
+find_documents({'$text': {'$search': 'western action adventure', '$caseSensitive': False}})
 
-search_documents({'$text': {'$search': 'western action adventure'}})
+find_documents({'$text': {'$search': 'western action adventure', '$caseSensitive': False}},
+               {'score': {'$meta': 'textScore'}, 'title': 1},
+               [('score', {'$meta': 'textScore'})])
