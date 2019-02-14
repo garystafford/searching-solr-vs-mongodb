@@ -2,6 +2,8 @@
 
 Materials for workshop on comparing searching with Apache Solr versus querying in MongoDB: 'Your Database is not a Search Engine'.
 
+Movie data used in demo publicly available from MongoDB: [Setup and Import the Data](https://docs.mongodb.com/charts/master/tutorial/movie-details/prereqs-and-import-data/#download-the-data)
+
 ## Set-up Instructions
 
 Assuming you have an existing MongoDB and Solr instances:
