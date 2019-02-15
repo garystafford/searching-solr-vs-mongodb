@@ -27,13 +27,13 @@ def find_documents(query, projection={'title': 1}, sort=[('title', pymongo.ASCEN
     documents = mongo_collection \
         .find(query, projection) \
         .sort(sort) \
-        .limit(10)
+        .limit(5)
 
     print("---")
     # print(documents.explain())
     print("query: %s" % query)
     print("projection: %s" % projection)
-    print("count: %s" % documents.count())
+    print("document count: %s" % documents.count())
     for document in documents:
         print(document)
 
