@@ -74,92 +74,109 @@ solr_search("\"star wars\" OR \"star trek\"", {
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("western action adventure", {
+solr_search("(*western* *action* *adventure*)", {
     "defType": "lucene",
-    "df": "title",
+    "fq": "countries: USA",
+    "df": "genres",
     "fl": "id title score",
-    "rows": "5"})
+    "rows": "500"})
 
-# why we can't add 'adventure' as a stop word
-solr_search("\"adventure\"", {
+solr_search("(western action adventure)", {
     "defType": "lucene",
-    "df": "title",
+    "fq": "countries: USA",
+    "df": "plot",
     "fl": "id title score",
-    "rows": "5"})
-
-# Extended DisMax (eDismax) Query Parser - Basic example, no boost
-solr_search("western action adventure", {
-    "defType": "lucene",
-    "df": "title",
-    "qf": "plot title genres",
-    "fl": "id title genres score",
     "rows": "5"})
 
 solr_search("*western* *action* *adventure*", {
-    "defType": "edismax",
-    "qf": "plot title genres",
-    "fl": "id title genres score",
-    "rows": "5"})
-
-# eDismax - Basic example, multiple search terms
-solr_search("actors:\"John Wayne\" AND western action adventure", {
-    "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-solr_search("western action adventure with John Wayne", {
-    "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-solr_search("western action adventure +\"John Wayne\"", {
-    "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-# eDismax - Boosted fields
-solr_search("western action adventure", {
-    "defType": "edismax",
-    "qf": "plot title^2.0 genres^3.0",
-    "fl": "id title genres score",
-    "rows": "5"})
-
-solr_search("classic western action adventure adventure", {
-    "defType": "edismax",
-    "qf": "plot title^2.0 genres^3.0",
-    "fl": "id title genres score",
-    "rows": "5"})
-
-# eDismax - Boost results that have a field that matches a specific value
-solr_search("classic western action adventure adventure", {
-    "defType": "edismax",
-    "qf": "plot title^2.0 genres^3.0",
-    "bq": "genres:western^5.0",
-    "fl": "id title genres score",
-    "rows": "5"})
-
-# More Like This Query Parser (MLTQParser) example
-mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
-
-mlt_qf = "director writers"
-solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
     "defType": "lucene",
-    "fl": "id plot title genres actors director score",
+    "fq": "countries: USA",
+    "df": "plot",
+    "fl": "id title score",
     "rows": "5"})
 
-mlt_qf = "actors"
-solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
-    "defType": "lucene",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-mlt_qf = "genres"
-solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
-    "defType": "lucene",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-# more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")
+# # why we can't add 'adventure' as a stop word
+# solr_search("\"adventure\"", {
+#     "defType": "lucene",
+#     "df": "title",
+#     "fl": "id title score",
+#     "rows": "5"})
+#
+# # Extended DisMax (eDismax) Query Parser - Basic example, no boost
+# solr_search("western action adventure", {
+#     "defType": "edismax",
+#     "fq": "countries: USA",
+#     "df": "title",
+#     "qf": "plot title genres",
+#     "fl": "id title genres score",
+#     "rows": "5"})
+#
+# solr_search("*western* *action* *adventure*", {
+#     "defType": "edismax",
+#     "fq": "countries: USA",
+#     "qf": "plot title genres",
+#     "fl": "id title genres score",
+#     "rows": "5"})
+#
+# # eDismax - Basic example, multiple search terms
+# solr_search("actors:\"John Wayne\" AND western action adventure", {
+#     "defType": "edismax",
+#     "qf": "plot title genres actors director",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# solr_search("western action adventure with John Wayne", {
+#     "defType": "edismax",
+#     "qf": "plot title genres actors director",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# solr_search("western action adventure +\"John Wayne\"", {
+#     "defType": "edismax",
+#     "qf": "plot title genres actors director",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# # eDismax - Boosted fields
+# solr_search("western action adventure", {
+#     "defType": "edismax",
+#     "qf": "plot title^2.0 genres^3.0",
+#     "fl": "id title genres score",
+#     "rows": "5"})
+#
+# solr_search("classic western action adventure adventure", {
+#     "defType": "edismax",
+#     "qf": "plot title^2.0 genres^3.0",
+#     "fl": "id title genres score",
+#     "rows": "5"})
+#
+# # eDismax - Boost results that have a field that matches a specific value
+# solr_search("classic western action adventure adventure", {
+#     "defType": "edismax",
+#     "qf": "plot title^2.0 genres^3.0",
+#     "bq": "genres:western^5.0",
+#     "fl": "id title genres score",
+#     "rows": "5"})
+#
+# # More Like This Query Parser (MLTQParser) example
+# mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
+#
+# mlt_qf = "director writers"
+# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
+#     "defType": "lucene",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# mlt_qf = "actors"
+# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
+#     "defType": "lucene",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# mlt_qf = "genres"
+# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
+#     "defType": "lucene",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# # more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")

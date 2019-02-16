@@ -36,6 +36,8 @@ def find_documents(query, projection={'_id': 0, 'title': 1}, sort=[('title', pym
     print("sort: %s" % sort)
     print("document count: %s" % documents.count())
     for document in documents:
+        if 'score' in document:
+            document['score'] = round(document['score'], 2)
         print(document)
 
 
@@ -53,10 +55,13 @@ find_documents({'title': {'$regex': 'star|wars', '$options': 'i'}})
 
 find_documents({'title': {'$regex': r'\bstar wars\b|\bstar trek\b', '$options': 'i'}})
 
-find_documents({'genres': {'$in': ['Western', 'Action', 'Adventure']}})
+find_documents({'genres': {'$in': ['Western', 'Action', 'Adventure']}, 'countries': 'USA'})
+
+find_documents({'plot': {'$regex': r'\bwestern\b|\baction\b|\badventure\b', '$options': 'i'}, 'countries': 'USA'})
 
 find_documents({'plot': {'$regex': 'western|action|adventure', '$options': 'i'}, 'countries': 'USA'})
 
+#
 find_documents({'$or': [{'title': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
                         {'plot': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
                         {'genres': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}}],
@@ -67,13 +72,21 @@ find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$optio
                         {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}],
                 'countries': 'USA'})
 
-find_documents({'$text': {'$search': 'western action adventure', '$caseSensitive': False}, 'countries': 'USA'})
+find_documents({'$text': {'$search': 'western action adventure',
+                          '$language': 'en',
+                          '$caseSensitive': False},
+                'countries': 'USA'})
 
-find_documents(query={'$text': {'$search': 'western action adventure', '$caseSensitive': False}, 'countries': 'USA'},
+find_documents(query={'$text': {'$search': 'western action adventure',
+                                '$language': 'en',
+                                '$caseSensitive': False},
+                      'countries': 'USA'},
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1},
                sort=[('score', {'$meta': 'textScore'})])
 
-find_documents(query={'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back', '$caseSensitive': False},
+find_documents(query={'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
+                                '$language': 'en',
+                                '$caseSensitive': False},
                       'countries': 'USA'},
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1},
                sort=[('score', {'$meta': 'textScore'})])
