@@ -22,10 +22,10 @@ def solr_search(q, **kwargs):
 
     print("----------\n")
     print("Parameters\n----------")
-    print("q : %s" % q)
+    print("q: %s" % q)
     print("kwargs: %s" % kwargs)
     print("\nResults\n----------")
-    print("count: %s" % results.hits)
+    print("document count: %s" % results.hits)
     print("qtime (ms): %s" % results.qtime)
     # print("docs: %s" % dumps(results.docs))
     for document in results.docs:
@@ -37,13 +37,13 @@ def solr_search(q, **kwargs):
 # More Like This Query Parser (MLTQParser) example
 def more_like_this_query_parser(q, mltfl):
     results = solr.more_like_this(q, mltfl)
-    # {"fl": "id plot title genres actors director score", "rows": "5"}
+
     print("----------\n")
     print("Parameters\n----------")
     print("q : %s" % q)
     print("mltfl: %s" % mltfl)
     print("\nResults\n----------")
-    print("count: %s" % results.hits)
+    print("document count: %s" % results.hits)
     print("qtime (ms): %s" % results.qtime)
     print("docs: %s" % dumps(results.docs))
 
@@ -52,6 +52,7 @@ def more_like_this_query_parser(q, mltfl):
 solr_search("*:*", **{
     "defType": "lucene",
     "fl": "title score",
+    "sort": "title asc",
     "rows": "5"})
 
 # Query 2
