@@ -17,101 +17,117 @@ solr = pysolr.Solr(solr_url + "/" + solr_collection)
 
 
 # Solr's default Query Parser (aka lucene parser)
-def solr_search(q, kwargs):
+def solr_search(q, **kwargs):
     results = solr.search(q, **kwargs)
 
-    print("---")
-    print("solr_search q: %s" % q)
-    print("solr_search hits: %s" % results.hits)
-    print("solr_search qtime (ms): %s" % results.qtime)
-    print("solr_search docs: %s" % dumps(results.docs))
+    print("----------\n")
+    print("Parameters\n----------")
+    print("q : %s" % q)
+    print("kwargs: %s" % kwargs)
+    print("\nResults\n----------")
+    print("count: %s" % results.hits)
+    print("qtime (ms): %s" % results.qtime)
+    print("docs: %s" % dumps(results.docs))
 
 
 # More Like This Query Parser (MLTQParser) example
 def more_like_this_query_parser(q, mltfl):
     results = solr.more_like_this(q, mltfl)
     # {"fl": "id plot title genres actors director score", "rows": "5"}
-    print("---")
-    print("more_like_this q: %s" % q)
-    print("more_like_this hits: %s" % results.hits)
-    print("more_like_this qtime (ms): %s" % results.qtime)
-    print("more_like_this docs: %s" % dumps(results.docs))
+    print("----------\n")
+    print("Parameters\n----------")
+    print("q : %s" % q)
+    print("mltfl: %s" % mltfl)
+    print("\nResults\n----------")
+    print("count: %s" % results.hits)
+    print("qtime (ms): %s" % results.qtime)
+    print("docs: %s" % dumps(results.docs))
 
 
-# score is always 1.0 (default)
-solr_search("*:*", {
+# Query 1
+solr_search("*:*", **{
     "defType": "lucene",
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", {
-    "defType": "lucene",
-    "df": "title",
-    "fl": "id title score",
-    "rows": "5"})
-
-solr_search("\"star wars\"", {
+# Query 2
+solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", **{
     "defType": "lucene",
     "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("star wars", {
+# Query 3
+solr_search("\"star wars\"", **{
     "defType": "lucene",
     "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("*star* *wars*", {
+# Query 4
+solr_search("star wars", **{
     "defType": "lucene",
     "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("\"star wars\" OR \"star trek\"", {
+# Query 5
+solr_search("*star* *wars*", **{
     "defType": "lucene",
     "df": "title",
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("(*western* *action* *adventure*)", {
+# Unused #1
+solr_search("\"star wars\" OR \"star trek\"", **{
+    "defType": "lucene",
+    "df": "title",
+    "fl": "id title score",
+    "rows": "5"})
+
+# Query 6
+solr_search("(*western* *action* *adventure*)", **{
     "defType": "lucene",
     "fq": "countries: USA",
     "df": "genres",
     "fl": "id title score",
-    "rows": "500"})
+    "rows": "5"})
 
-solr_search("(western action adventure)", {
+# Unused #2
+solr_search("(western action adventure)", **{
     "defType": "lucene",
     "fq": "countries: USA",
     "df": "plot",
     "fl": "id title score",
     "rows": "5"})
 
-solr_search("*western* *action* *adventure*", {
+# Unused #3
+solr_search("*western* *action* *adventure*", **{
     "defType": "lucene",
     "fq": "countries: USA",
     "df": "plot",
     "fl": "id title score",
     "rows": "5"})
 
-# # why we can't add 'adventure' as a stop word
-# solr_search("\"adventure\"", {
-#     "defType": "lucene",
-#     "df": "title",
-#     "fl": "id title score",
-#     "rows": "5"})
-#
-# # Extended DisMax (eDismax) Query Parser - Basic example, no boost
-# solr_search("western action adventure", {
-#     "defType": "edismax",
-#     "fq": "countries: USA",
-#     "df": "title",
-#     "qf": "plot title genres",
-#     "fl": "id title genres score",
-#     "rows": "5"})
-#
-# solr_search("*western* *action* *adventure*", {
+# why we can't add 'adventure' as a stop word
+# Unused #4
+solr_search("\"adventure\"", **{
+    "defType": "lucene",
+    "df": "title",
+    "fl": "id title score",
+    "rows": "5"})
+
+# Extended DisMax (eDismax) Query Parser - Basic example, no boost
+# Query 7
+solr_search("western action adventure", **{
+    "defType": "edismax",
+    "fq": "countries: USA",
+    "df": "title",
+    "qf": "plot title genres",
+    "fl": "id title genres score",
+    "rows": "5"})
+
+# solr_search("*western* *action* *adventure*", **{
 #     "defType": "edismax",
 #     "fq": "countries: USA",
 #     "qf": "plot title genres",
@@ -119,39 +135,39 @@ solr_search("*western* *action* *adventure*", {
 #     "rows": "5"})
 #
 # # eDismax - Basic example, multiple search terms
-# solr_search("actors:\"John Wayne\" AND western action adventure", {
+# solr_search("actors:\"John Wayne\" AND western action adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title genres actors director",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
-# solr_search("western action adventure with John Wayne", {
+# solr_search("western action adventure with John Wayne", **{
 #     "defType": "edismax",
 #     "qf": "plot title genres actors director",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
-# solr_search("western action adventure +\"John Wayne\"", {
+# solr_search("western action adventure +\"John Wayne\"", **{
 #     "defType": "edismax",
 #     "qf": "plot title genres actors director",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
 # # eDismax - Boosted fields
-# solr_search("western action adventure", {
+# solr_search("western action adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title^2.0 genres^3.0",
 #     "fl": "id title genres score",
 #     "rows": "5"})
 #
-# solr_search("classic western action adventure adventure", {
+# solr_search("classic western action adventure adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title^2.0 genres^3.0",
 #     "fl": "id title genres score",
 #     "rows": "5"})
 #
 # # eDismax - Boost results that have a field that matches a specific value
-# solr_search("classic western action adventure adventure", {
+# solr_search("classic western action adventure adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title^2.0 genres^3.0",
 #     "bq": "genres:western^5.0",
@@ -162,21 +178,21 @@ solr_search("*western* *action* *adventure*", {
 # mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
 #
 # mlt_qf = "director writers"
-# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
+# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
 #     "defType": "lucene",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
 # mlt_qf = "actors"
-# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
+# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
 #     "defType": "lucene",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
 # mlt_qf = "genres"
-# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), {
+# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
 #     "defType": "lucene",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
-#
-# # more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")
+
+# more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")
