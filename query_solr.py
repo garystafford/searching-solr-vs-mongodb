@@ -100,6 +100,7 @@ solr_search("western action adventure", **{
     "fl": "title genres score",
     "rows": "5"})
 
+# Query 8
 solr_search("*western* *action* *adventure*", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -108,12 +109,14 @@ solr_search("*western* *action* *adventure*", **{
     "rows": "5"})
 
 # eDismax - Basic example, multiple search terms
+# Query 9
 solr_search("actors:\"John Wayne\" AND western action adventure", **{
     "defType": "edismax",
     "qf": "plot title genres actors director",
     "fl": "id plot title genres actors director score",
     "rows": "5"})
 
+# Query 10
 solr_search("western action adventure with John Wayne", **{
     "defType": "edismax",
     "qf": "plot title genres actors director",
