@@ -84,11 +84,11 @@ solr_search("*star* *wars*", **{
     "rows": "5"})
 
 # Query 6
-solr_search("(*western* *action* *adventure*)", **{
+solr_search("(adventure action western)", **{
     "defType": "lucene",
     "fq": "countries: USA",
     "df": "genres",
-    "fl": "title score",
+    "fl": "title genres score",
     "rows": "5"})
 
 # Extended DisMax (eDismax) Query Parser - Basic example, no boost
@@ -181,23 +181,7 @@ solr_search("classic western action adventure adventure", **{
 #     "fl": "title score",
 #     "rows": "5"})
 #
-# # Unused #2
-# solr_search("(western action adventure)", **{
-#     "defType": "lucene",
-#     "fq": "countries: USA",
-#     "df": "plot",
-#     "fl": "title score",
-#     "rows": "5"})
-#
-# # Unused #3
-# solr_search("*western* *action* *adventure*", **{
-#     "defType": "lucene",
-#     "fq": "countries: USA",
-#     "df": "plot",
-#     "fl": "title score",
-#     "rows": "5"})
 # why we can't add 'adventure' as a stop word
-#
 # # Unused #4
 # solr_search("\"adventure\"", **{
 #     "defType": "lucene",
