@@ -86,11 +86,6 @@ find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$optio
 find_documents({'$text': {'$search': 'western action adventure',
                           '$language': 'en',
                           '$caseSensitive': False},
-                'countries': 'USA'})
-
-find_documents({'$text': {'$search': 'western action adventure',
-                          '$language': 'en',
-                          '$caseSensitive': False},
                 'countries': 'USA'},
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
