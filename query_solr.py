@@ -59,40 +59,32 @@ solr_search("*:*", **{
 solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", **{
     "defType": "lucene",
     "df": "title",
-    "fl": "title score",
-    "rows": "5"})
+    "fl": "title score"})
 
 # Query 3
 solr_search("\"star wars\"", **{
     "defType": "lucene",
     "df": "title",
-    "fl": "title score",
-    "rows": "10"})
+    "fl": "title score"})
 
 # Query 4
 solr_search("star wars", **{
     "defType": "lucene",
+    "fq": "countries: USA",
     "df": "title",
     "fl": "title score",
     "rows": "5"})
 
 # Query 5
-solr_search("*star* *wars*", **{
-    "defType": "lucene",
-    "df": "title",
-    "fl": "title score",
-    "rows": "5"})
-
-# Query 6
 solr_search("(adventure action western)", **{
     "defType": "lucene",
     "fq": "countries: USA",
     "df": "genres",
     "fl": "title genres score",
-    "rows": "5"})
+    "rows": "500"})
 
 # Extended DisMax (eDismax) Query Parser - Basic example, no boost
-# Query 7
+# Query 6
 solr_search("western action adventure", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -101,23 +93,16 @@ solr_search("western action adventure", **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 8
-solr_search("*western* *action* *adventure*", **{
-    "defType": "edismax",
-    "fq": "countries: USA",
-    "qf": "plot title genres",
-    "fl": "title genres score",
-    "rows": "5"})
 
 # eDismax - Basic example, multiple search terms
-# Query 9
+# Query 8
 solr_search("actors:\"John Wayne\" AND western action adventure", **{
     "defType": "edismax",
     "qf": "plot title genres actors director",
     "fl": "id plot title genres actors director score",
     "rows": "5"})
 
-# Query 10
+# Query 9
 solr_search("western action adventure with John Wayne", **{
     "defType": "edismax",
     "qf": "plot title genres actors director",
@@ -187,4 +172,11 @@ solr_search("classic western action adventure adventure", **{
 #     "defType": "lucene",
 #     "df": "title",
 #     "fl": "title score",
+#     "rows": "5"})
+# Query 7
+# solr_search("*western* *action* *adventure*", **{
+#     "defType": "edismax",
+#     "fq": "countries: USA",
+#     "qf": "plot title genres",
+#     "fl": "title genres score",
 #     "rows": "5"})

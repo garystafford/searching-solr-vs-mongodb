@@ -17,7 +17,10 @@ mongo_collection = mongo_db["movieDetails"]
 
 def create_indexes():
     mongo_collection.create_index([("title", pymongo.ASCENDING)])
+
     mongo_collection.create_index([("countries", pymongo.DESCENDING)])
+
+    # mongo_collection.create_index([("title", pymongo.TEXT)])
 
     mongo_collection.create_index([("genres", pymongo.TEXT),
                                    ("title", pymongo.TEXT),
@@ -29,18 +32,21 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
         documents = mongo_collection \
             .find(query, projection) \
             .sort(*sort) \
-            .limit(10)
+            .limit(5)
     else:
         documents = mongo_collection \
             .find(query, projection) \
-            .limit(10)
+            .limit(5)
 
     print("----------\n")
     print("Parameters\n----------")
     # print(documents.explain())
     print("query: %s" % query)
     print("projection: %s" % projection)
-    # print("sort: %s" % sort)
+    try:
+        print("sort: %s" % sort)
+    except:
+        print("sort: %s" % "none")
     print("\nResults\n----------")
     print("document count: %s" % documents.count())
     for document in documents:
@@ -49,7 +55,7 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
         print(document)
 
 
-# create_indexes()
+create_indexes()
 
 # Query 1
 find_documents({})
@@ -61,28 +67,20 @@ find_documents({'title': 'Star Wars: Episode V - The Empire Strikes Back'})
 find_documents({'title': {'$regex': r'\bstar wars\b', '$options': 'i'}})
 
 # Query 4
-find_documents({'title': {'$regex': r'\bstar\b|\bwars\b', '$options': 'i'}})
+# find_documents({'title': {'$regex': 'star|wars', '$options': 'i'}})
+find_documents({'$text': {'$search': 'star wars',
+                          '$language': 'en',
+                          '$caseSensitive': False},
+                'countries': 'USA'},
+               [('score', {'$meta': 'textScore'})],
+               projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
+
 
 # Query 5
-find_documents({'title': {'$regex': 'star|wars', '$options': 'i'}})
-
-# Query #6
 find_documents({'genres': {'$in': ['Western', 'Action', 'Adventure']}, 'countries': 'USA'},
                projection={'_id': 0, 'genres': 1, 'title': 1})
 
-# Query 7
-find_documents({'$or': [{'title': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
-                        {'plot': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
-                        {'genres': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}}],
-                'countries': 'USA'})
-
-# Query 8
-find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$options': 'i'}},
-                        {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}},
-                        {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}],
-                'countries': 'USA'})
-
-# Query 9
+# Query 6
 find_documents({'$text': {'$search': 'western action adventure',
                           '$language': 'en',
                           '$caseSensitive': False},
@@ -90,20 +88,35 @@ find_documents({'$text': {'$search': 'western action adventure',
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
-find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
-                          '$language': 'en',
-                          '$caseSensitive': False},
-                'countries': 'USA'},
-               [('score', {'$meta': 'textScore'})],
-               projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
-
-# # Unused #1
+# find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
+#                           '$language': 'en',
+#                           '$caseSensitive': False},
+#                 'countries': 'USA'},
+#                [('score', {'$meta': 'textScore'})],
+#                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
+#
+# # Unused
 # find_documents({'title': {'$regex': r'\bstar wars\b|\bstar trek\b', '$options': 'i'}})
 #
-# # Unused #2
+# # Unused
 # find_documents({'plot': {'$regex': r'\bwestern\b|\baction\b|\badventure\b', '$options': 'i'},
 #                       'countries': 'USA'})
 #
-# # Unused #3
+# # Unused
 # find_documents({'plot': {'$regex': 'western|action|adventure', '$options': 'i'},
 #                       'countries': 'USA'})
+#
+# # Unused
+# find_documents({'title': {'$regex': r'\bstar\b|\bwars\b', '$options': 'i'}})
+#
+# # Unused
+# find_documents({'$or': [{'title': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
+#                         {'plot': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
+#                         {'genres': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}}],
+#                 'countries': 'USA'})
+#
+# # Unused
+# find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$options': 'i'}},
+#                         {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}},
+#                         {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}],
+#                 'countries': 'USA'})

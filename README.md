@@ -26,7 +26,7 @@ Update environment variables with your own values and set
 
 ```bash
 export SOLR_URL="http://{{ host }}:8983/solr"
-export MONOGDB_CONN="mongodb+srv://{{ user }}:{{ password }}@{{ host }}/admin"
+export MONOGDB_CONN="mongodb+srv://{{ user }}:{{ password }}@{{ host }}/movies"
 ```
 
 Import `movieDetails_mongo.json` JSON data to MongoDB
