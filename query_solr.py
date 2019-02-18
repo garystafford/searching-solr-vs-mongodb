@@ -67,7 +67,7 @@ solr_search("\"star wars\"", **{
     "defType": "lucene",
     "df": "title",
     "fl": "title score",
-    "rows": "5"})
+    "rows": "10"})
 
 # Query 4
 solr_search("star wars", **{

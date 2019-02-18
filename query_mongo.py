@@ -4,7 +4,7 @@
 # site: https://programmaticponderings.com
 # license: MIT License
 # purpose: Perform queries against MongoDB
-# usage: python3 ./query_mongo.py
+# USAge: python3 ./query_mongo.py
 
 import pymongo
 import os
@@ -29,11 +29,11 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
         documents = mongo_collection \
             .find(query, projection) \
             .sort(*sort) \
-            .limit(5)
+            .limit(10)
     else:
         documents = mongo_collection \
             .find(query, projection) \
-            .limit(5)
+            .limit(10)
 
     print("----------\n")
     print("Parameters\n----------")
@@ -67,38 +67,38 @@ find_documents({'title': {'$regex': r'\bstar\b|\bwars\b', '$options': 'i'}})
 find_documents({'title': {'$regex': 'star|wars', '$options': 'i'}})
 
 # Query #6
-find_documents({'genres': {'$in': ['Western', 'Action', 'Adventure']}, 'countries': 'usa'},
+find_documents({'genres': {'$in': ['Western', 'Action', 'Adventure']}, 'countries': 'USA'},
                projection={'_id': 0, 'genres': 1, 'title': 1})
 
 # Query 7
 find_documents({'$or': [{'title': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
                         {'plot': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
                         {'genres': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}}],
-                'countries': 'usa'})
+                'countries': 'USA'})
 
 # Query 8
 find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$options': 'i'}},
                         {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}},
                         {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}],
-                'countries': 'usa'})
+                'countries': 'USA'})
 
 # Query 9
 find_documents({'$text': {'$search': 'western action adventure',
                           '$language': 'en',
                           '$caseSensitive': False},
-                'countries': 'usa'})
+                'countries': 'USA'})
 
 find_documents({'$text': {'$search': 'western action adventure',
                           '$language': 'en',
                           '$caseSensitive': False},
-                'countries': 'usa'},
+                'countries': 'USA'},
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
 find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
                           '$language': 'en',
                           '$caseSensitive': False},
-                'countries': 'usa'},
+                'countries': 'USA'},
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
@@ -107,8 +107,8 @@ find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes 
 #
 # # Unused #2
 # find_documents({'plot': {'$regex': r'\bwestern\b|\baction\b|\badventure\b', '$options': 'i'},
-#                       'countries': 'usa'})
+#                       'countries': 'USA'})
 #
 # # Unused #3
 # find_documents({'plot': {'$regex': 'western|action|adventure', '$options': 'i'},
-#                       'countries': 'usa'})
+#                       'countries': 'USA'})
