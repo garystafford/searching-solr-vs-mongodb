@@ -22,11 +22,11 @@ def delete_all():
 
     raw_data = "<delete><query>*:*</query></delete>"
     r = requests.post(solr_url + "/" + solr_collection + path, data=raw_data, headers=headers)
-    print("delete status: ", r.status_code, r.reason)
+    print("Delete all documents: ", r.status_code, r.reason)
 
     raw_data = "<commit/>"
     r = requests.post(solr_url + "/" + solr_collection + path, data=raw_data, headers=headers)
-    print("commit status: ", r.status_code, r.reason)
+    print("Commit delete: ", r.status_code, r.reason)
 
 
 def load_json_file_to_solr():
@@ -35,8 +35,15 @@ def load_json_file_to_solr():
 
     path = "/update/json/docs?commit=true"
     r = requests.post(solr_url + "/" + solr_collection + path, json=json_data)
-    print("add all status: ", r.status_code, r.reason)
+    print("Bulk add all documents: ", r.status_code, r.reason)
+
+
+def get_document_count():
+    path = "/select?q=*:*&rows=0"
+    r = requests.get(solr_url + "/" + solr_collection + path)
+    print("Document count: ", r.status_code, r.reason, r.text)
 
 
 delete_all()
 load_json_file_to_solr()
+get_document_count()
