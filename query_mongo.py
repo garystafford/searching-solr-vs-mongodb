@@ -77,7 +77,7 @@ find_documents({'$text': {'$search': 'star wars',
 
 
 # Query 5
-find_documents({'genres': {'$in': ['Western', 'Action', 'Adventure']}, 'countries': 'USA'},
+find_documents({'genres': {'$in': ['Adventure', 'Action', 'Western']}, 'countries': 'USA'},
                projection={'_id': 0, 'genres': 1, 'title': 1})
 
 # Query 6
@@ -88,13 +88,14 @@ find_documents({'$text': {'$search': 'western action adventure',
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
-# find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
-#                           '$language': 'en',
-#                           '$caseSensitive': False},
-#                 'countries': 'USA'},
-#                [('score', {'$meta': 'textScore'})],
-#                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
-#
+find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
+                          '$language': 'en',
+                          '$caseSensitive': False},
+                'countries': 'USA'},
+               [('score', {'$meta': 'textScore'})],
+               projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
+
+
 # # Unused
 # find_documents({'title': {'$regex': r'\bstar wars\b|\bstar trek\b', '$options': 'i'}})
 #

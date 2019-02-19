@@ -81,61 +81,100 @@ solr_search("(adventure action western)", **{
     "fq": "countries: USA",
     "df": "genres",
     "fl": "title genres score",
-    "rows": "500"})
+    "rows": "5"})
+
+# Query 5: Alternate - Require Western
+solr_search("(adventure action +western)", **{
+    "defType": "lucene",
+    "fq": "countries: USA",
+    "df": "genres",
+    "fl": "title genres score",
+    "rows": "5"})
 
 # Extended DisMax (eDismax) Query Parser - Basic example, no boost
 # Query 6
-solr_search("western action adventure", **{
+solr_search("adventure action western", **{
     "defType": "edismax",
     "fq": "countries: USA",
-    "df": "title",
+    "qf": "plot title genres",
+    "fl": "title genres score",
+    "rows": "10"})
+
+# Query 6: Alternate - Require/Prohibit
+solr_search("adventure action +western -romance cowboy", **{
+    "defType": "edismax",
+    "fq": "countries: USA",
     "qf": "plot title genres",
     "fl": "title genres score",
     "rows": "5"})
 
-
-# eDismax - Basic example, multiple search terms
-# Query 8
-solr_search("actors:\"John Wayne\" AND western action adventure", **{
+# Query 7: The Movie Dilemma
+solr_search("A cowboys movie", **{
     "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-# Query 9
-solr_search("western action adventure with John Wayne", **{
-    "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-solr_search("western action adventure +\"John Wayne\"", **{
-    "defType": "edismax",
-    "qf": "plot title genres actors director",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-# eDismax - Boosted fields
-solr_search("western action adventure", **{
-    "defType": "edismax",
-    "qf": "plot title^2.0 genres^3.0",
+    "fq": "countries: USA",
+    "qf": "plot title genres",
     "fl": "title genres score",
-    "rows": "5"})
+    "rows": "10"})
 
-solr_search("classic western action adventure adventure", **{
+# Query 7: Alternate - Stop Words (simulation)
+solr_search("The Lego Movie -movie", **{
     "defType": "edismax",
-    "qf": "plot title^2.0 genres^3.0",
+    "fq": "countries: USA",
+    "qf": "plot title genres",
     "fl": "title genres score",
-    "rows": "5"})
+    "rows": "10"})
 
-# eDismax - Boost results that have a field that matches a specific value
-solr_search("classic western action adventure adventure", **{
+# Query 7: Alternate 2 - Negative Boost
+solr_search("A cowboys movie", **{
     "defType": "edismax",
-    "qf": "plot title^2.0 genres^3.0",
-    "bq": "genres:western^5.0",
+    "fq": "countries: USA",
+    "qf": "plot title genres",
+    "bq": "title:movie^-2.0",
     "fl": "title genres score",
-    "rows": "5"})
+    "rows": "10"})
 
+# # eDismax - Basic example, multiple search terms
+# # Query 8
+# solr_search("actors:\"John Wayne\" AND western action adventure", **{
+#     "defType": "edismax",
+#     "qf": "plot title genres actors director",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# # Query 9
+# solr_search("western action adventure with John Wayne", **{
+#     "defType": "edismax",
+#     "qf": "plot title genres actors director",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# solr_search("western action adventure +\"John Wayne\"", **{
+#     "defType": "edismax",
+#     "qf": "plot title genres actors director",
+#     "fl": "id plot title genres actors director score",
+#     "rows": "5"})
+#
+# # eDismax - Boosted fields
+# solr_search("western action adventure", **{
+#     "defType": "edismax",
+#     "qf": "plot title^2.0 genres^3.0",
+#     "fl": "title genres score",
+#     "rows": "5"})
+#
+# solr_search("classic western action adventure adventure", **{
+#     "defType": "edismax",
+#     "qf": "plot title^2.0 genres^3.0",
+#     "fl": "title genres score",
+#     "rows": "5"})
+#
+# # eDismax - Boost results that have a field that matches a specific value
+# solr_search("classic western action adventure adventure", **{
+#     "defType": "edismax",
+#     "qf": "plot title^2.0 genres^3.0",
+#     "bq": "genres:western^5.0",
+#     "fl": "title genres score",
+#     "rows": "5"})
+#
 # # More Like This Query Parser (MLTQParser) example
 # mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
 #
