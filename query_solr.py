@@ -34,6 +34,7 @@ def solr_search(q, **kwargs):
         print(document)
 
 
+# TODO: Unused - Not Working, FIX!
 # More Like This Query Parser (MLTQParser) example
 def more_like_this_query_parser(q, mltfl):
     results = solr.more_like_this(q, mltfl)
@@ -133,15 +134,38 @@ solr_search("A cowboys movie", **{
     "fl": "title genres score",
     "rows": "10"})
 
+# More Like This Query Parser (MLTQParser) example
+mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
+
+# Query 8
+mlt_qf = "director writers"
+solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
+    "defType": "lucene",
+    "fl": "id plot title genres actors director score",
+    "rows": "5"})
+
+# Query 8: Alternate 1
+mlt_qf = "actors"
+solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
+    "defType": "lucene",
+    "fl": "id plot title genres actors director score",
+    "rows": "5"})
+
+# Query 8: Alternate 2
+mlt_qf = "genres"
+solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
+    "defType": "lucene",
+    "fl": "id plot title genres actors director score",
+    "rows": "5"})
+
+# # Unused
 # # eDismax - Basic example, multiple search terms
-# # Query 8
 # solr_search("actors:\"John Wayne\" AND western action adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title genres actors director",
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
-# # Query 9
 # solr_search("western action adventure with John Wayne", **{
 #     "defType": "edismax",
 #     "qf": "plot title genres actors director",
@@ -175,27 +199,6 @@ solr_search("A cowboys movie", **{
 #     "fl": "title genres score",
 #     "rows": "5"})
 #
-# # More Like This Query Parser (MLTQParser) example
-# mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
-#
-# mlt_qf = "director writers"
-# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
-#     "defType": "lucene",
-#     "fl": "id plot title genres actors director score",
-#     "rows": "5"})
-#
-# mlt_qf = "actors"
-# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
-#     "defType": "lucene",
-#     "fl": "id plot title genres actors director score",
-#     "rows": "5"})
-#
-# mlt_qf = "genres"
-# solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
-#     "defType": "lucene",
-#     "fl": "id plot title genres actors director score",
-#     "rows": "5"})
-
 # more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")
 
 # # Unused #1
