@@ -57,7 +57,7 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
 
 create_indexes()
 
-# Query 1
+# Query 1a
 find_documents({})
 
 # Query 2
