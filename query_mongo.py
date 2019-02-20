@@ -55,10 +55,24 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
         print(document)
 
 
+def count_documents():
+    count = mongo_collection.count()
+
+    print("----------\n")
+    print("Parameters\n----------")
+    # print(documents.explain())
+    print("query: {}")
+    print("\nResults\n----------")
+    print("document count: %s" % count)
+
+
 create_indexes()
 
 # Query 1a
 find_documents({})
+
+# Query 1b: Count Only
+count_documents()
 
 # Query 2
 find_documents({'title': 'Star Wars: Episode V - The Empire Strikes Back'})
