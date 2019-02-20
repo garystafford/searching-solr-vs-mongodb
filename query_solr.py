@@ -34,6 +34,25 @@ def solr_search(q, **kwargs):
         print(document)
 
 
+def get_movie_id(title):
+    # More Like This Query Parser (MLTQParser) example
+    movie_id = solr.search("title:\"%s\"" % title, **{
+        "defType": "lucene",
+        "omitHeader": "true",
+        "fl": "id",
+        "indent": "false",
+        "rows": 1
+    }).docs[0]['id']
+
+    print("----------\n")
+    print("Parameters\n----------")
+    print("title: %s " % title)
+    print("\nResults\n----------")
+    print("id: %s " % movie_id)
+
+    return movie_id
+
+
 # TODO: Unused - Not Working, FIX!
 # More Like This Query Parser (MLTQParser) example
 def more_like_this_query_parser(q, mltfl):
@@ -76,7 +95,7 @@ solr_search("star wars", **{
     "fl": "title score",
     "rows": "5"})
 
-# Query 5
+# Query 5a
 solr_search("(adventure action western)", **{
     "defType": "lucene",
     "fq": "countries: USA",
@@ -84,7 +103,7 @@ solr_search("(adventure action western)", **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 5: Alternate - Require Western
+# Query 5b: Require Western
 solr_search("(adventure action +western)", **{
     "defType": "lucene",
     "fq": "countries: USA",
@@ -93,7 +112,7 @@ solr_search("(adventure action +western)", **{
     "rows": "5"})
 
 # Extended DisMax (eDismax) Query Parser - Basic example, no boost
-# Query 6
+# Query 6a
 solr_search("adventure action western", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -101,7 +120,7 @@ solr_search("adventure action western", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# Query 6: Alternate - Require/Prohibit
+# Query 6b: Require/Prohibit
 solr_search("adventure action +western -romance cowboy", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -109,7 +128,7 @@ solr_search("adventure action +western -romance cowboy", **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 7: The Movie Dilemma
+# Query 7a: The Movie Dilemma
 solr_search("A cowboys movie", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -117,7 +136,7 @@ solr_search("A cowboys movie", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# Query 7: Alternate - Stop Words (simulation)
+# Query 7b: Stop Words (simulation)
 solr_search("The Lego Movie -movie", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -125,7 +144,7 @@ solr_search("The Lego Movie -movie", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# Query 7: Alternate 2 - Negative Boost
+# Query 7c: Negative Boost
 solr_search("A cowboys movie", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -134,28 +153,28 @@ solr_search("A cowboys movie", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# More Like This Query Parser (MLTQParser) example
-mlt_id = "07776f22-e4db-463e-a6c0-50f692e30838"
+# Query 8a
+mlt_id = get_movie_id("Star Wars: Episode I - The Phantom Menace")
 
-# Query 8
-mlt_qf = "director writers"
-solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
-    "defType": "lucene",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-# Query 8: Alternate 1
-mlt_qf = "actors"
-solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
-    "defType": "lucene",
-    "fl": "id plot title genres actors director score",
-    "rows": "5"})
-
-# Query 8: Alternate 2
 mlt_qf = "genres"
+
+solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1 count }%s" % (mlt_qf, mlt_id), **{
+    "defType": "lucene",
+    "fq": "countries: USA",
+    "fl": "title genres score",
+    "rows": "5"})
+
+# Query 8b
+mlt_qf = "actors director writers"
+
+solr_search("id:\"%s\"" % mlt_id, **{
+    "defType": "lucene",
+    "fl": "actors director writers"})
+
 solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
     "defType": "lucene",
-    "fl": "id plot title genres actors director score",
+    "fq": "countries: USA",
+    "fl": "title actors director writers score",
     "rows": "5"})
 
 # # Unused

@@ -190,3 +190,4 @@ count: 444
 <https://docs.mongodb.com/charts/master/tutorial/movie-details/prereqs-and-import-data/#download-the-data>
 <https://docs.atlas.mongodb.com/import/mongoimport/>
 <https://docs.mongodb.com/manual/reference/method/db.collection.find/>
+<https://lucidworks.com/2009/09/02/optimizing-findability-in-lucene-and-solr/>
