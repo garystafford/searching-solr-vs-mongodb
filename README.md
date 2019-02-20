@@ -10,7 +10,7 @@ Assuming you have an existing MongoDB and Solr instances:
 
 -   Import JSON data to MongoDB (command below)
 -   Create Solr `movies` collection (command below)
--   Import JSON data to Solr (Python script: `solr_import.py`)
+-   Index JSON data to Solr (Python script: `solr_index_movies.py`)
 -   Set (2) environment variables (commands below)
 -   Run `query_mongo.py` and `query_solr.py` query scripts
 
@@ -51,82 +51,171 @@ time python3 ./query_solr.py
 Actually documents are not shown for brevity.
 
 ```text
----
-solr_search q: *:*
-solr_search hits: 2250
-solr_search qtime (ms): 3
----
-solr_search q: "Star Wars: Episode V - The Empire Strikes Back"
-solr_search hits: 1
-solr_search qtime (ms): 2
----
-solr_search q: "star wars"
-solr_search hits: 6
-solr_search qtime (ms): 1
----
-solr_search q: star wars
-solr_search hits: 15
-solr_search qtime (ms): 1
----
-solr_search q: *star* *wars*
-solr_search hits: 20
-solr_search qtime (ms): 3
----
-solr_search q: "star wars" OR "star trek"
-solr_search hits: 11
-solr_search qtime (ms): 1
----
-solr_search q: western action adventure
-solr_search hits: 24
-solr_search qtime (ms): 1
----
-solr_search q: "adventure"
-solr_search hits: 11
-solr_search qtime (ms): 1
----
-solr_search q: western action adventure
-solr_search hits: 24
-solr_search qtime (ms): 1
----
-solr_search q: *western* *action* *adventure*
-solr_search hits: 452
-solr_search qtime (ms): 19
----
-solr_search q: actors:"John Wayne" AND western action adventure
-solr_search hits: 3
-solr_search qtime (ms): 2
----
-solr_search q: western action adventure with John Wayne
-solr_search hits: 793
-solr_search qtime (ms): 2
----
-solr_search q: western action adventure +"John Wayne"
-solr_search hits: 4
-solr_search qtime (ms): 1
----
-solr_search q: western action adventure
-solr_search hits: 434
-solr_search qtime (ms): 2
----
-solr_search q: classic western action adventure adventure
-solr_search hits: 438
-solr_search qtime (ms): 2
----
-solr_search q: classic western action adventure adventure
-solr_search hits: 438
-solr_search qtime (ms): 1
----
-solr_search q: {!mlt qf="director writers" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
-solr_search hits: 53
-solr_search qtime (ms): 7
----
-solr_search q: {!mlt qf="actors" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
-solr_search hits: 77
-solr_search qtime (ms): 5
----
-solr_search q: {!mlt qf="genres" mintf=1 mindf=1}07776f22-e4db-463e-a6c0-50f692e30838
-solr_search hits: 440
-solr_search qtime (ms): 4
+> time python3 ./query_solr.py
+
+Parameters
+----------
+q: *:*
+kwargs: {'defType': 'lucene', 'fl': 'title score', 'sort': 'title asc', 'rows': '5'}
+
+Results
+----------
+document count: 2250
+qtime (ms): 5
+----------
+
+Parameters
+----------
+q: "Star Wars: Episode V - The Empire Strikes Back"
+kwargs: {'defType': 'lucene', 'df': 'title', 'fl': 'title score'}
+
+Results
+----------
+document count: 1
+qtime (ms): 2
+----------
+
+Parameters
+----------
+q: "star wars"
+kwargs: {'defType': 'lucene', 'df': 'title', 'fl': 'title score'}
+
+Results
+----------
+document count: 6
+qtime (ms): 2
+----------
+
+Parameters
+----------
+q: star wars
+kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'df': 'title', 'fl': 'title score', 'rows': '5'}
+
+Results
+----------
+document count: 18
+qtime (ms): 1
+----------
+
+Parameters
+----------
+q: (adventure action western)
+kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'df': 'genres', 'fl': 'title genres score', 'rows': '5'}
+
+Results
+----------
+document count: 244
+qtime (ms): 1
+----------
+
+Parameters
+----------
+q: (adventure action +western)
+kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'df': 'genres', 'fl': 'title genres score', 'rows': '5'}
+
+Results
+----------
+document count: 24
+qtime (ms): 1
+----------
+
+Parameters
+----------
+q: adventure action western
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '10'}
+
+Results
+----------
+document count: 259
+qtime (ms): 1
+----------
+
+Parameters
+----------
+q: adventure action +western -romance cowboy
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '5'}
+
+Results
+----------
+document count: 25
+qtime (ms): 2
+----------
+
+Parameters
+----------
+q: A cowboys movie
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '10'}
+
+Results
+----------
+document count: 23
+qtime (ms): 1
+----------
+
+Parameters
+----------
+q: The Lego Movie -movie
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '10'}
+
+Results
+----------
+document count: 1
+qtime (ms): 2
+----------
+
+Parameters
+----------
+q: A cowboys movie
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'bq': 'title:movie^-2.0', 'fl': 'title genres score', 'rows': '10'}
+
+Results
+----------
+document count: 23
+qtime (ms): 1
+----------
+
+Parameters
+----------
+title: Star Wars: Episode I - The Phantom Menace
+
+Results
+----------
+id: 993406a2-cb93-4cd6-bc0b-31b00ea6780f
+----------
+
+Parameters
+----------
+q: {!mlt qf="genres" mintf=1 mindf=1 count }993406a2-cb93-4cd6-bc0b-31b00ea6780f
+kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'fl': 'title genres score', 'rows': '5'}
+
+Results
+----------
+document count: 252
+qtime (ms): 9
+----------
+
+Parameters
+----------
+q: id:"993406a2-cb93-4cd6-bc0b-31b00ea6780f"
+kwargs: {'defType': 'lucene', 'fl': 'actors director writers'}
+
+Results
+----------
+document count: 1
+qtime (ms): 1
+----------
+
+Parameters
+----------
+q: {!mlt qf="actors director writers" mintf=1 mindf=1}993406a2-cb93-4cd6-bc0b-31b00ea6780f
+kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'fl': 'title actors director writers score', 'rows': '10'}
+
+Results
+----------
+document count: 82
+qtime (ms): 4
+
+python3 ./query_solr.py  0.46s user 0.27s system 32% cpu 2.232 total
 ```
 
 ## Output from MongoDB Queries
@@ -134,54 +223,85 @@ solr_search qtime (ms): 4
 Actually documents are not shown for brevity.
 
 ```text
----
+> time python3 ./query_mongo.py
+
+Parameters
+----------
 query: {}
-projection: {'title': 1}
-count: 2250
----
+projection: {'_id': 0, 'title': 1}
+sort: none
+
+Results
+----------
+document count: 2250
+----------
+
+Parameters
+----------
 query: {'title': 'Star Wars: Episode V - The Empire Strikes Back'}
-projection: {'title': 1}
-count: 1
----
+projection: {'_id': 0, 'title': 1}
+sort: none
+
+Results
+----------
+document count: 1
+----------
+
+Parameters
+----------
 query: {'title': {'$regex': '\\bstar wars\\b', '$options': 'i'}}
-projection: {'title': 1}
-count: 6
----
-query: {'title': {'$regex': '\\bstar\\b|\\bwars\\b', '$options': 'i'}}
-projection: {'title': 1}
-count: 15
----
-query: {'title': {'$regex': 'star|wars', '$options': 'i'}}
-projection: {'title': 1}
-count: 20
----
-query: {'title': {'$regex': '\\bstar wars\\b|\\bstar trek\\b', '$options': 'i'}}
-projection: {'title': 1}
-count: 11
----
-query: {'genres': {'$in': ['Western', 'Action', 'Adventure']}}
-projection: {'title': 1}
-count: 410
----
-query: {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}}
-projection: {'title': 1}
-count: 53
----
-query: {'$or': [{'title': {'$regex': '\\bwestern\\b|\\baction\\b|\\adventure\\b', '$options': 'i'}}, {'plot': {'$regex': '\\bwestern\\b|\\baction\\b|\\adventure\\b', '$options': 'i'}}, {'genres': {'$regex': '\\bwestern\\b|\\baction\\b|\\adventure\\b', '$options': 'i'}}]}
-projection: {'title': 1}
-count: 324
----
-query: {'$or': [{'title': {'$regex': 'western|action|adventure', '$options': 'i'}}, {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}}, {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}]}
-projection: {'title': 1}
-count: 452
----
-query: {'$text': {'$search': 'western action adventure'}}
-projection: {'title': 1}
-count: 444
----
-query: {'$text': {'$search': 'western action adventure'}}
-projection: {'score': {'$meta': 'textScore'}, 'title': 1}
-count: 444
+projection: {'_id': 0, 'title': 1}
+sort: none
+
+Results
+----------
+document count: 6
+----------
+
+Parameters
+----------
+query: {'$text': {'$search': 'star wars', '$language': 'en', '$caseSensitive': False}, 'countries': 'USA'}
+projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1}
+sort: [('score', {'$meta': 'textScore'})]
+
+Results
+----------
+document count: 59
+----------
+
+Parameters
+----------
+query: {'genres': {'$in': ['Adventure', 'Action', 'Western']}, 'countries': 'USA'}
+projection: {'_id': 0, 'genres': 1, 'title': 1}
+sort: none
+
+Results
+----------
+document count: 244
+----------
+
+Parameters
+----------
+query: {'$text': {'$search': 'western action adventure', '$language': 'en', '$caseSensitive': False}, 'countries': 'USA'}
+projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1}
+sort: [('score', {'$meta': 'textScore'})]
+
+Results
+----------
+document count: 259
+----------
+
+Parameters
+----------
+query: {'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back', '$language': 'en', '$caseSensitive': False}, 'countries': 'USA'}
+projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1}
+sort: [('score', {'$meta': 'textScore'})]
+
+Results
+----------
+document count: 103
+
+python3 ./query_mongo.py  0.19s user 0.06s system 15% cpu 1.578 total
 ```
 
 ## References
