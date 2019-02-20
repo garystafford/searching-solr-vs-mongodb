@@ -153,7 +153,7 @@ solr_search("A cowboys movie", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# Query 8a
+# Query 8a: MLT Genres
 mlt_id = get_movie_id("Star Wars: Episode I - The Phantom Menace")
 
 mlt_qf = "genres"
@@ -164,7 +164,7 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1 count }%s" % (mlt_qf, mlt_id), **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 8b
+# Query 8b: The People Problem
 mlt_qf = "actors director writers"
 
 solr_search("id:\"%s\"" % mlt_id, **{
