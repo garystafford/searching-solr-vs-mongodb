@@ -68,12 +68,18 @@ def more_like_this_query_parser(q, mltfl):
     print("docs: %s" % dumps(results.docs))
 
 
-# Query 1
+# Query 1a
 solr_search("*:*", **{
     "defType": "lucene",
     "fl": "title score",
     "sort": "title asc",
     "rows": "5"})
+
+# Query 1b: Count Only
+solr_search("*:*", **{
+    "defType": "lucene",
+    "omitHeader": "true",
+    "rows": "0"})
 
 # Query 2
 solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", **{

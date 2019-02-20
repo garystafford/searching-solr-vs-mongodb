@@ -49,10 +49,10 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
         print("sort: %s" % "none")
     print("\nResults\n----------")
     print("document count: %s" % documents.count())
-    # for document in documents:
-    #     if 'score' in document:
-    #         document['score'] = round(document['score'], 2)
-    #     print(document)
+    for document in documents:
+        if 'score' in document:
+            document['score'] = round(document['score'], 2)
+        print(document)
 
 
 create_indexes()
