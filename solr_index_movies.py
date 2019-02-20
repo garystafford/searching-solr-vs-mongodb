@@ -3,8 +3,8 @@
 # author: Gary A. Stafford
 # site: https://programmaticponderings.com
 # license: MIT License
-# purpose: Add MongoDB collection of documents to Solr collection
-# usage: python3 ./solr_import.py
+# purpose: Index the collection of movie documents to Solr
+# usage: python3 ./solr_index_movies.py
 
 import json
 import os
