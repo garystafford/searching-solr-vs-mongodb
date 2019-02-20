@@ -175,7 +175,7 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
     "defType": "lucene",
     "fq": "countries: USA",
     "fl": "title actors director writers score",
-    "rows": "5"})
+    "rows": "10"})
 
 # # Unused
 # # eDismax - Basic example, multiple search terms
