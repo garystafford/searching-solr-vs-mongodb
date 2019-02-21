@@ -18,7 +18,7 @@ mongo_collection = mongo_db["movieDetails"]
 def create_indexes():
     mongo_collection.create_index([("title", pymongo.ASCENDING)])
 
-    mongo_collection.create_index([("countries", pymongo.DESCENDING)])
+    mongo_collection.create_index([("countries", pymongo.ASCENDING)])
 
     # mongo_collection.create_index([("title", pymongo.TEXT)])
 
@@ -102,15 +102,14 @@ find_documents({'$text': {'$search': 'western action adventure',
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
-find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
-                          '$language': 'en',
-                          '$caseSensitive': False},
-                'countries': 'USA'},
-               [('score', {'$meta': 'textScore'})],
-               projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
-
 
 # # Unused
+# find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
+#                           '$language': 'en',
+#                           '$caseSensitive': False},
+#                 'countries': 'USA'},
+#                [('score', {'$meta': 'textScore'})],
+#                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 # find_documents({'title': {'$regex': r'\bstar wars\b|\bstar trek\b', '$options': 'i'}})
 #
 # # Unused
