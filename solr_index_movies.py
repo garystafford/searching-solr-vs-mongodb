@@ -35,7 +35,7 @@ def load_json_file_to_solr():
 
     path = "/update/json/docs?commit=true"
     r = requests.post(solr_url + "/" + solr_collection + path, json=json_data)
-    print("Bulk add all documents: ", r.status_code, r.reason)
+    print("Bulk add all documents: ", r.status_code, r.reason, r.text)
 
 
 def get_document_count():

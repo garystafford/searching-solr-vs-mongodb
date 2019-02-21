@@ -127,7 +127,7 @@ solr_search("adventure action western", **{
     "rows": "10"})
 
 # Query 6b: Require/Prohibit
-solr_search("adventure action +western -romance cowboy", **{
+solr_search("adventure action +western -romance", **{
     "defType": "edismax",
     "fq": "countries: USA",
     "qf": "plot title genres",
@@ -159,7 +159,16 @@ solr_search("A cowboys movie", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# Query 8a: MLT Genres
+# Query 8: Boost Function
+solr_search("adventure action +western -romance", **{
+    "defType": "edismax",
+    "fq": "countries: USA",
+    "qf": "plot title genres",
+    "fl": "title awards.wins score",
+    "boost": "div(field(awards.wins,min),2)",
+    "rows": "5"})
+
+# Query 9a: MLT Genres
 mlt_id = get_movie_id("Star Wars: Episode I - The Phantom Menace")
 
 mlt_qf = "genres"
@@ -170,7 +179,7 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1 count }%s" % (mlt_qf, mlt_id), **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 8b: The People Problem
+# Query 9b: The People Problem
 mlt_qf = "actors director writers"
 
 solr_search("id:\"%s\"" % mlt_id, **{
