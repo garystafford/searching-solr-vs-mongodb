@@ -8,7 +8,7 @@ Movie data used in demo publicly available from MongoDB: [Setup and Import the D
 
 Assuming you have an existing MongoDB and Solr instances:
 
--   Create MongoDB and Solr Docker containers (Docker commands below)
+-   Create MongoDB and Solr Docker containers (commands below)
 -   Set (2) environment variables (commands below)
 -   Import JSON data to MongoDB (command below)
 -   Index JSON data to Solr (command below)
@@ -23,7 +23,6 @@ Create MongoDB and Solr Docker containers
 docker run --name mongo -p 27017:27017 -d mongo:latest
 docker run --name solr -p 8983:8983 -d solr:latest
 docker exec -it --user=solr solr bin/solr create_core -c movies
-
 ```
 
 Update environment variables with your own values and set
@@ -32,7 +31,6 @@ Update environment variables with your own values and set
 # local docker example
 export SOLR_URL="http://localhost:8983/solr"
 export MONOGDB_CONN="mongodb://localhost:27017/movies"
-
 env | grep 'SOLR_URL\|MONOGDB_CONN'
 ```
 
@@ -81,16 +79,16 @@ Run query scripts
 ```bash
 time python3 ./query_mongo.py
 time python3 ./query_solr.py
-
 ```
 
 ## Output from Solr Searches
 
-Actually documents are not shown for brevity.
+Actually query results are not shown for brevity.
 
 ```text
 > time python3 ./query_solr.py
 
+----------
 Parameters
 ----------
 q: *:*
@@ -99,7 +97,18 @@ kwargs: {'defType': 'lucene', 'fl': 'title score', 'sort': 'title asc', 'rows': 
 Results
 ----------
 document count: 2250
-qtime (ms): 5
+qtime (ms): 0
+----------
+
+Parameters
+----------
+q: *:*
+kwargs: {'defType': 'lucene', 'omitHeader': 'true', 'rows': '0'}
+
+Results
+----------
+document count: 2250
+qtime (ms): None
 ----------
 
 Parameters
@@ -110,7 +119,7 @@ kwargs: {'defType': 'lucene', 'df': 'title', 'fl': 'title score'}
 Results
 ----------
 document count: 1
-qtime (ms): 2
+qtime (ms): 0
 ----------
 
 Parameters
@@ -121,7 +130,7 @@ kwargs: {'defType': 'lucene', 'df': 'title', 'fl': 'title score'}
 Results
 ----------
 document count: 6
-qtime (ms): 2
+qtime (ms): 1
 ----------
 
 Parameters
@@ -160,18 +169,29 @@ qtime (ms): 1
 Parameters
 ----------
 q: adventure action western
-kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '10'}
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '5'}
 
 Results
 ----------
 document count: 259
-qtime (ms): 1
+qtime (ms): 2
 ----------
 
 Parameters
 ----------
-q: adventure action +western -romance cowboy
-kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title genres score', 'rows': '5'}
+q: adventure action western
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title^2.0 genres^4.0', 'fl': 'title genres score', 'rows': '5'}
+
+Results
+----------
+document count: 259
+qtime (ms): 13
+----------
+
+Parameters
+----------
+q: adventure action +western -romance
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title^2.0 genres^4.0', 'fl': 'title genres score', 'rows': '5'}
 
 Results
 ----------
@@ -187,7 +207,7 @@ kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres'
 Results
 ----------
 document count: 23
-qtime (ms): 1
+qtime (ms): 0
 ----------
 
 Parameters
@@ -198,7 +218,7 @@ kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres'
 Results
 ----------
 document count: 1
-qtime (ms): 2
+qtime (ms): 11
 ----------
 
 Parameters
@@ -209,7 +229,18 @@ kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres'
 Results
 ----------
 document count: 23
-qtime (ms): 1
+qtime (ms): 12
+----------
+
+Parameters
+----------
+q: adventure action +western -romance
+kwargs: {'defType': 'edismax', 'fq': 'countries: USA', 'qf': 'plot title genres', 'fl': 'title awards.wins score', 'boost': 'div(field(awards.wins,min),2)', 'rows': '5'}
+
+Results
+----------
+document count: 25
+qtime (ms): 2
 ----------
 
 Parameters
@@ -218,42 +249,41 @@ title: Star Wars: Episode I - The Phantom Menace
 
 Results
 ----------
-id: 993406a2-cb93-4cd6-bc0b-31b00ea6780f
+id: 7eb78a72-8df8-43c6-9111-b6b45b152b19
 ----------
 
 Parameters
 ----------
-q: {!mlt qf="genres" mintf=1 mindf=1 count }993406a2-cb93-4cd6-bc0b-31b00ea6780f
+q: {!mlt qf="genres" mintf=1 mindf=1}7eb78a72-8df8-43c6-9111-b6b45b152b19
 kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'fl': 'title genres score', 'rows': '5'}
 
 Results
 ----------
 document count: 252
-qtime (ms): 9
+qtime (ms): 20
 ----------
 
 Parameters
 ----------
-q: id:"993406a2-cb93-4cd6-bc0b-31b00ea6780f"
+q: id:"7eb78a72-8df8-43c6-9111-b6b45b152b19"
 kwargs: {'defType': 'lucene', 'fl': 'actors director writers'}
 
 Results
 ----------
 document count: 1
-qtime (ms): 1
+qtime (ms): 0
 ----------
 
 Parameters
 ----------
-q: {!mlt qf="actors director writers" mintf=1 mindf=1}993406a2-cb93-4cd6-bc0b-31b00ea6780f
+q: {!mlt qf="actors director writers" mintf=1 mindf=1}7eb78a72-8df8-43c6-9111-b6b45b152b19
 kwargs: {'defType': 'lucene', 'fq': 'countries: USA', 'fl': 'title actors director writers score', 'rows': '10'}
 
 Results
 ----------
-document count: 82
-qtime (ms): 4
-
-python3 ./query_solr.py  0.46s user 0.27s system 32% cpu 2.232 total
+document count: 55
+qtime (ms): 2
+python3 ./query_solr.py  0.42s user 0.16s system 52% cpu 1.100 total
 ```
 
 ## Output from MongoDB Queries
@@ -263,11 +293,21 @@ Actually documents are not shown for brevity.
 ```text
 > time python3 ./query_mongo.py
 
+----------
 Parameters
 ----------
 query: {}
 projection: {'_id': 0, 'title': 1}
 sort: none
+
+Results
+----------
+document count: 2250
+----------
+
+Parameters
+----------
+query: {}
 
 Results
 ----------
@@ -304,7 +344,7 @@ sort: [('score', {'$meta': 'textScore'})]
 
 Results
 ----------
-document count: 59
+document count: 18
 ----------
 
 Parameters
@@ -321,7 +361,7 @@ document count: 244
 Parameters
 ----------
 query: {'$text': {'$search': 'western action adventure', '$language': 'en', '$caseSensitive': False}, 'countries': 'USA'}
-projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1}
+projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'genres': 1, 'title': 1}
 sort: [('score', {'$meta': 'textScore'})]
 
 Results
@@ -331,18 +371,19 @@ document count: 259
 
 Parameters
 ----------
-query: {'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back', '$language': 'en', '$caseSensitive': False}, 'countries': 'USA'}
-projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1}
+query: {'$text': {'$search': 'western action adventure', '$language': 'en', '$caseSensitive': False}, 'countries': 'USA'}
+projection: {'score': {'$meta': 'textScore'}, '_id': 0, 'genres': 1, 'title': 1}
 sort: [('score', {'$meta': 'textScore'})]
 
 Results
 ----------
-document count: 103
+document count: 259
 
-python3 ./query_mongo.py  0.19s user 0.06s system 15% cpu 1.578 total
+python3 ./query_mongo.py  0.20s user 0.09s system 17% cpu 1.677 total
 ```
 
 ## References
+
 <https://wiki.apache.org/solr/SolrRelevancyFAQ>
 <https://lucene.apache.org/solr/guide/7_6/common-query-parameters.html>
 <https://docs.mongodb.com/charts/master/tutorial/movie-details/prereqs-and-import-data/#download-the-data>
