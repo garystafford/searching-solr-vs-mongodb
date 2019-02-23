@@ -68,7 +68,7 @@ def more_like_this_query_parser(q, mltfl):
     print("docs: %s" % dumps(results.docs))
 
 
-# Query 1a
+# Query 1a: All Documents
 solr_search("*:*", **{
     "defType": "lucene",
     "fl": "title score",
@@ -81,19 +81,19 @@ solr_search("*:*", **{
     "omitHeader": "true",
     "rows": "0"})
 
-# Query 2
+# Query 2: Exact Search
 solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", **{
     "defType": "lucene",
     "df": "title",
     "fl": "title score"})
 
-# Query 3
+# Query 3: Search Phrase
 solr_search("\"star wars\"", **{
     "defType": "lucene",
     "df": "title",
     "fl": "title score"})
 
-# Query 4
+# Query 4: Search Terms
 solr_search("star wars", **{
     "defType": "lucene",
     "fq": "countries: USA",
@@ -101,7 +101,7 @@ solr_search("star wars", **{
     "fl": "title score",
     "rows": "5"})
 
-# Query 5a
+# Query 5a: Multiple Search Terms
 solr_search("(adventure action western)", **{
     "defType": "lucene",
     "fq": "countries: USA",
@@ -109,7 +109,7 @@ solr_search("(adventure action western)", **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 5b: Require Western
+# Query 5b: Required Search Term
 solr_search("(adventure action +western)", **{
     "defType": "lucene",
     "fq": "countries: USA",
@@ -117,8 +117,7 @@ solr_search("(adventure action +western)", **{
     "fl": "title genres score",
     "rows": "5"})
 
-# Extended DisMax (eDismax) Query Parser - Basic example, no boost
-# Query 6a
+# Query 6a: eDisMax Query
 solr_search("adventure action western", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -126,7 +125,7 @@ solr_search("adventure action western", **{
     "fl": "title genres score",
     "rows": "10"})
 
-# Query 6b: Require/Prohibit
+# Query 6b: eDisMax Require/Prohibit Terms
 solr_search("adventure action +western -romance", **{
     "defType": "edismax",
     "fq": "countries: USA",
@@ -173,13 +172,13 @@ mlt_id = get_movie_id("Star Wars: Episode I - The Phantom Menace")
 
 mlt_qf = "genres"
 
-solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1 count }%s" % (mlt_qf, mlt_id), **{
+solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
     "defType": "lucene",
     "fq": "countries: USA",
     "fl": "title genres score",
     "rows": "5"})
 
-# Query 9b: The People Problem
+# Query 9b: The Problem with People
 mlt_qf = "actors director writers"
 
 solr_search("id:\"%s\"" % mlt_id, **{

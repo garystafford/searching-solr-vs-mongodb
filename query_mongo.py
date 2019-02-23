@@ -45,7 +45,7 @@ def find_documents(query, *sort, projection={'_id': 0, 'title': 1}):
     print("projection: %s" % projection)
     try:
         print("sort: %s" % sort)
-    except:
+    except TypeError:
         print("sort: %s" % "none")
     print("\nResults\n----------")
     print("document count: %s" % documents.count())
@@ -68,19 +68,19 @@ def count_documents():
 
 create_indexes()
 
-# Query 1a
+# Query 1a: All Documents
 find_documents({})
 
 # Query 1b: Count Only
 count_documents()
 
-# Query 2
+# Query 2: Exact Search
 find_documents({'title': 'Star Wars: Episode V - The Empire Strikes Back'})
 
-# Query 3
+# Query 3: Search Phrase
 find_documents({'title': {'$regex': r'\bstar wars\b', '$options': 'i'}})
 
-# Query 4
+# Query 4: Search Terms
 # find_documents({'title': {'$regex': 'star|wars', '$options': 'i'}})
 find_documents({'$text': {'$search': 'star wars',
                           '$language': 'en',
@@ -90,7 +90,7 @@ find_documents({'$text': {'$search': 'star wars',
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
 
-# Query 5
+# Query 5a: Multiple Search Terms
 find_documents({'genres': {'$in': ['Adventure', 'Action', 'Western']}, 'countries': 'USA'},
                projection={'_id': 0, 'genres': 1, 'title': 1})
 
