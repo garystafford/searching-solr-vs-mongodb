@@ -89,6 +89,14 @@ def main():
         "fl": "title genres score",
         "rows": "5"})
 
+    # Query 6d: eDisMax w/ Required/Prohibited Terms, w/o Boost
+    solr_search("adventure action +western -romance", **{
+        "defType": "edismax",
+        "fq": "countries: USA",
+        "qf": "plot title genres",
+        "fl": "title genres score",
+        "rows": "5"})
+
     # Query 7a: The Movie Dilemma
     solr_search("A cowboys movie", **{
         "defType": "edismax",
