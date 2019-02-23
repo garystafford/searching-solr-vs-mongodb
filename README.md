@@ -288,7 +288,7 @@ python3 ./query_solr.py  0.42s user 0.16s system 52% cpu 1.100 total
 
 ## Output from MongoDB Queries
 
-Actually documents are not shown for brevity.
+Actually query results are not shown for brevity.
 
 ```text
 > time python3 ./query_mongo.py

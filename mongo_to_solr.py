@@ -70,7 +70,7 @@ def add_each():
 #     print("commit status: ", r.status_code, r.reason, r.url, r.content)
 
 
-# Change schema items to multiValued = falses
+# Change schema items to multiValued = false
 def multi_value_false():
     path = "/schema"
     json_data = "{\"replace-field\":{\"name\":\"title\",\"type\":\"text_general\",\"multiValued\":false}," \
@@ -81,6 +81,6 @@ def multi_value_false():
 
 
 # create_collection()
-multi_value_false()
+# multi_value_false()
 # add_all()
 # add_each()
