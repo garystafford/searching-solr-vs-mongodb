@@ -3,7 +3,7 @@
 # author: Gary A. Stafford
 # site: https://programmaticponderings.com
 # license: MIT License
-# purpose: Add MongoDB collection of documents to Solr collection
+# purpose: ETL - Import MongoDB collection of documents to Solr index
 # usage: python3 ./mongo_to_solr.py
 
 import pymongo
