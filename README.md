@@ -1,6 +1,6 @@
 # Searching with Apache Solr
 
-Materials for workshop on comparing searching with Apache Solr versus querying in MongoDB: 'Your Database is not a Search Engine'.
+Materials for workshop on comparing searching with Apache Solr versus querying in MongoDB: 'Apache Solr: Because your Database is not a Search Engine'.
 
 Movie data used in demo publicly available from MongoDB: [Setup and Import the Data](https://docs.mongodb.com/charts/master/tutorial/movie-details/prereqs-and-import-data/#download-the-data)
 
@@ -8,25 +8,32 @@ Movie data used in demo publicly available from MongoDB: [Setup and Import the D
 
 Assuming you have an existing MongoDB and Solr instances:
 
--   Import JSON data to MongoDB (command below)
--   Create Solr `movies` collection (command below)
--   Index JSON data to Solr (Python script: `solr_index_movies.py`)
+-   Create MongoDB and Solr Docker containers (Docker commands below)
 -   Set (2) environment variables (commands below)
+-   Import JSON data to MongoDB (command below)
+-   Index JSON data to Solr (command below)
+-   Run curl command to modify Solr schema (command below)
 -   Run `query_mongo.py` and `query_solr.py` query scripts
 
 ## Useful Commands
 
-Create Solr `movies` collection
+Create MongoDB and Solr Docker containers
 
 ```bash
-solr-7.6.0/bin/solr create -c movies -s 2 -rf 2
+docker run --name mongo -p 27017:27017 -d mongo:latest
+docker run --name solr -p 8983:8983 -d solr:latest
+docker exec -it --user=solr solr bin/solr create_core -c movies
+
 ```
 
 Update environment variables with your own values and set
 
 ```bash
-export SOLR_URL="http://{{ host }}:8983/solr"
-export MONOGDB_CONN="mongodb+srv://{{ user }}:{{ password }}@{{ host }}/movies"
+# local docker example
+export SOLR_URL="http://localhost:8983/solr"
+export MONOGDB_CONN="mongodb://localhost:27017/movies"
+
+env | grep 'SOLR_URL\|MONOGDB_CONN'
 ```
 
 Import `movieDetails_mongo.json` JSON data to MongoDB
@@ -38,7 +45,38 @@ mongoimport \
   --drop --file "data/movieDetails_mongo.json"
 ```
 
-Run scripts
+Index JSON data to Solr
+
+```bash
+python3 ./solr_index_movies.py
+```
+
+Modify Solr movies schema
+
+```bash
+curl -X POST \
+  "${SOLR_URL}/movies/schema" \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "replace-field":{
+     "name":"title",
+     "type":"text_en",
+     "multiValued":false
+  },
+  "replace-field":{
+     "name":"plot",
+     "type":"text_en",
+     "multiValued":false
+  },
+  "replace-field":{
+     "name":"genres",
+     "type":"text_en",
+     "multiValued":true
+  }
+}'
+```
+
+Run query scripts
 
 ```bash
 time python3 ./query_mongo.py
