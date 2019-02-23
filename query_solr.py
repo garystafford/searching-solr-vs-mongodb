@@ -53,15 +53,14 @@ def get_movie_id(title):
     return movie_id
 
 
-# TODO: Unused - Not Working, FIX!
-# More Like This Query Parser (MLTQParser) example
+# TODO: MLT Query Parser Method - Not working...
 def more_like_this_query_parser(q, mltfl):
     results = solr.more_like_this(q, mltfl)
 
     print("----------\n")
     print("Parameters\n----------")
     print("q : %s" % q)
-    print("mltfl: %s" % mltfl)
+    print("mlt fl: %s" % mltfl)
     print("\nResults\n----------")
     print("document count: %s" % results.hits)
     print("qtime (ms): %s" % results.qtime)
@@ -191,8 +190,8 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
     "fl": "title actors director writers score",
     "rows": "10"})
 
-# # Unused
-# # eDismax - Basic example, multiple search terms
+# # Additional Unused Query Variations
+# # eDisMax - Basic example, multiple search terms
 # solr_search("actors:\"John Wayne\" AND western action adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title genres actors director",
@@ -211,7 +210,7 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
 #     "fl": "id plot title genres actors director score",
 #     "rows": "5"})
 #
-# # eDismax - Boosted fields
+# # eDisMax - Boosted fields
 # solr_search("western action adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title^2.0 genres^3.0",
@@ -224,7 +223,7 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
 #     "fl": "title genres score",
 #     "rows": "5"})
 #
-# # eDismax - Boost results that have a field that matches a specific value
+# # eDisMax - Boost results that have a field that matches a specific value
 # solr_search("classic western action adventure adventure", **{
 #     "defType": "edismax",
 #     "qf": "plot title^2.0 genres^3.0",
@@ -232,23 +231,19 @@ solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
 #     "fl": "title genres score",
 #     "rows": "5"})
 #
-# more_like_this_query_parser("id:07776f22-e4db-463e-a6c0-50f692e30838", "genres")
-
-# # Unused #1
 # solr_search("\"star wars\" OR \"star trek\"", **{
 #     "defType": "lucene",
 #     "df": "title",
 #     "fl": "title score",
 #     "rows": "5"})
 #
-# why we can't add 'adventure' as a stop word
-# # Unused #4
-# solr_search("\"adventure\"", **{
+# # why we can't add 'movie' as a stop word
+# solr_search("\"movie\"", **{
 #     "defType": "lucene",
 #     "df": "title",
 #     "fl": "title score",
 #     "rows": "5"})
-# Query 7
+#
 # solr_search("*western* *action* *adventure*", **{
 #     "defType": "edismax",
 #     "fq": "countries: USA",

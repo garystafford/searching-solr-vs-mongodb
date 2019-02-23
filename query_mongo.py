@@ -89,7 +89,6 @@ find_documents({'$text': {'$search': 'star wars',
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
-
 # Query 5a: Multiple Search Terms
 find_documents({'genres': {'$in': ['Adventure', 'Action', 'Western']}, 'countries': 'USA'},
                projection={'_id': 0, 'genres': 1, 'title': 1})
@@ -102,8 +101,7 @@ find_documents({'$text': {'$search': 'western action adventure',
                [('score', {'$meta': 'textScore'})],
                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 
-
-# # Unused
+# # Additional Unused Query Variations
 # find_documents({'$text': {'$search': 'Star Wars: Episode V - The Empire Strikes Back',
 #                           '$language': 'en',
 #                           '$caseSensitive': False},
@@ -112,24 +110,19 @@ find_documents({'$text': {'$search': 'western action adventure',
 #                projection={'score': {'$meta': 'textScore'}, '_id': 0, 'title': 1})
 # find_documents({'title': {'$regex': r'\bstar wars\b|\bstar trek\b', '$options': 'i'}})
 #
-# # Unused
 # find_documents({'plot': {'$regex': r'\bwestern\b|\baction\b|\badventure\b', '$options': 'i'},
-#                       'countries': 'USA'})
+#                 'countries': 'USA'})
 #
-# # Unused
 # find_documents({'plot': {'$regex': 'western|action|adventure', '$options': 'i'},
-#                       'countries': 'USA'})
+#                 'countries': 'USA'})
 #
-# # Unused
 # find_documents({'title': {'$regex': r'\bstar\b|\bwars\b', '$options': 'i'}})
 #
-# # Unused
 # find_documents({'$or': [{'title': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
 #                         {'plot': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}},
 #                         {'genres': {'$regex': r'\bwestern\b|\baction\b|\adventure\b', '$options': 'i'}}],
 #                 'countries': 'USA'})
 #
-# # Unused
 # find_documents({'$or': [{'title': {'$regex': 'western|action|adventure', '$options': 'i'}},
 #                         {'plot': {'$regex': 'western|action|adventure', '$options': 'i'}},
 #                         {'genres': {'$regex': 'western|action|adventure', '$options': 'i'}}],
