@@ -21,8 +21,10 @@ Create MongoDB and Solr Docker containers
 
 ```bash
 docker run --name mongo -p 27017:27017 -d mongo:latest
-docker run --name solr -p 8983:8983 -d solr:latest
-docker exec -it --user=solr solr bin/solr create_core -c movies
+docker run --name solr -d -p 8983:8983 -v $PWD/conf:/conf solr:latest solr-create -c movies -d /conf
+
+# docker run --name solr -p 8983:8983 -d solr:latest solr-create -c movies
+# docker exec -it --user=solr solr bin/solr create_core -c movies
 ```
 
 Update environment variables with your own values and set
@@ -79,6 +81,12 @@ Run query scripts
 ```bash
 time python3 ./query_mongo.py
 time python3 ./query_solr.py
+```
+
+# Copy Solr Configs from Container
+
+```bash
+docker cp solr:/opt/solr/server/solr/movies/conf/ .
 ```
 
 ## Output from Solr Searches

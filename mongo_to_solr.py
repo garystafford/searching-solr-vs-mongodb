@@ -59,7 +59,7 @@ def add_each():
         print('add all status: ', r.status_code, r.reason, r.url, r.content)
 
 
-# TODO - Not working correctly
+# TODO: Fix - Create collection function not working correctly
 def create_collection():
     # https://lucene.apache.org/solr/guide/7_6/collections-api.html
     path = '/admin/collections?action=CREATE&name=' + solr_collection + \

@@ -254,7 +254,7 @@ def get_movie_id(title):
     return movie_id
 
 
-# TODO: MLT Query Parser Method - Not working...
+# TODO: Fix - MLT Query Parser function not working
 def more_like_this_query_parser(q, mltfl):
     results = solr.more_like_this(q, mltfl)
 
