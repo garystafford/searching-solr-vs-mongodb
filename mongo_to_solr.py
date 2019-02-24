@@ -76,8 +76,9 @@ def create_collection():
 # Change schema items to multiValued = false
 def multi_value_false():
     path = '/schema'
-    json_data = '{"replace-field":{"name":"title","type":"text_general","multiValued":false},' \
-                '"replace-field":{"name":"plot","type":"text_general","multiValued":false}}'
+    json_data = '{"replace-field":{"name":"title","type":"text_en","multiValued":false},' \
+                '"replace-field":{"name":"plot","type":"text_en","multiValued":false},' \
+                '"replace-field":{"name":"genres","type":"text_en","multiValued":true}}'
 
     r = requests.post(solr_url + '/' + solr_collection + path, data=json_data)
     print('add all status: ', r.status_code, r.reason)

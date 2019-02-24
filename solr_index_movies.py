@@ -18,6 +18,9 @@ data_file = 'data/movieDetails.json'
 def main():
     delete_all()
     load_json_file_to_solr()
+    multi_value_false()
+    delete_all()
+    load_json_file_to_solr()
     get_document_count()
 
 
@@ -41,7 +44,17 @@ def load_json_file_to_solr():
 
     path = '/update/json/docs?commit=true'
     r = requests.post(solr_url + '/' + solr_collection + path, json=json_data)
-    print('Bulk add all documents: ', r.status_code, r.reason, r.text)
+    print('Bulk add all documents: ', r.status_code, r.reason)
+
+
+def multi_value_false():
+    path = '/schema'
+    json_data = '{"replace-field":{"name":"title","type":"text_en","multiValued":false},' \
+                '"replace-field":{"name":"plot","type":"text_en","multiValued":false},' \
+                '"replace-field":{"name":"genres","type":"text_en","multiValued":true}}'
+
+    r = requests.post(solr_url + '/' + solr_collection + path, data=json_data)
+    print('Modify schema: ', r.status_code, r.reason)
 
 
 def get_document_count():
