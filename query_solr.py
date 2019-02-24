@@ -50,7 +50,7 @@ def main():
         "rows": "5"})
 
     # Query 5a: Multiple Search Terms
-    solr_search("(adventure action western)", **{
+    solr_search("adventure action western", **{
         "defType": "lucene",
         "fq": "countries: USA",
         "df": "genres",
@@ -58,7 +58,7 @@ def main():
         "rows": "5"})
 
     # Query 5b: Required Search Term
-    solr_search("(adventure action +western)", **{
+    solr_search("adventure action +western", **{
         "defType": "lucene",
         "fq": "countries: USA",
         "df": "genres",
@@ -128,6 +128,13 @@ def main():
         "fq": "countries: USA",
         "qf": "plot title genres",
         "fl": "title awards.wins score",
+        "rows": "5"})
+
+    solr_search("adventure action +western -romance", **{
+        "defType": "edismax",
+        "fq": "countries: USA",
+        "qf": "plot title genres",
+        "fl": "title awards.wins score",
         "boost": "div(field(awards.wins,min),2)",
         "rows": "5"})
 
@@ -154,6 +161,30 @@ def main():
         "fq": "countries: USA",
         "fl": "title actors director writers score",
         "rows": "10"})
+
+    # Query 10a: Replacement Synonyms
+    solr_search("ciborg", **{
+        "defType": "edismax",
+        "qf": "title plot genres",
+        "fl": "title, score",
+        "stopwords": "true",
+        "rows": "5"})
+
+    # Query 10b: Oneway Expansion Synonyms
+    solr_search("droid", **{
+        "defType": "edismax",
+        "qf": "title plot genres",
+        "fl": "title, score",
+        "stopwords": "true",
+        "rows": "5"})
+
+    # Query 10c: Multiway Expansion Synonyms
+    solr_search("scary", **{
+        "defType": "edismax",
+        "qf": "title plot genres",
+        "fl": "title, score",
+        "stopwords": "true",
+        "rows": "5"})
 
     # # Additional Unused Query Variations
     # # eDisMax - Basic example, multiple search terms

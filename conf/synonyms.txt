@@ -29,11 +29,20 @@ pixima => pixma
 
 ## Custom synonym groups for movies index ##
 
-# Oneway Expansion Synonyms examples
-droid => droid,android,robot,cyborg
-r2d2 => r2d2,droid
-c3po => c3po,droid
+# Replacement Synonyms example
+scarey => scary
+spookey => spooky
+ciborg => cyborg
 
 # Multiway Expansion Synonyms examples
 scary,slasher,spooky,evil,horror
-cowboy,buckaroo,buckeroo,cowhand,cowman,cowpoke,cowpuncher,wrangler
+# cowboy,buckaroo,buckeroo,cowhand,cowman,cowpoke,cowpuncher,wrangler
+
+# Oneway Expansion Synonyms examples
+droid => droid,android,robot,cyborg
+
+# Jargon
+ai, artificial intelligence
+cia,central intelligence agency
+fbi,federal bureau investigation
+lol,laughing out loud,league legends

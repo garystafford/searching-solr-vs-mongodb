@@ -23,7 +23,11 @@ Create MongoDB and Solr Docker containers
 docker run --name mongo -p 27017:27017 -d mongo:latest
 docker run --name solr -d -p 8983:8983 -v $PWD/conf:/conf solr:latest solr-create -c movies -d /conf
 
+docker logs solr --follow
+
 # docker run --name solr -p 8983:8983 -d solr:latest solr-create -c movies
+# docker cp solr:/opt/solr/server/solr/movies/conf/ .
+
 # docker exec -it --user=solr solr bin/solr create_core -c movies
 ```
 
