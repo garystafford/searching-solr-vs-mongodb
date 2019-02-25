@@ -30,9 +30,8 @@ def main():
         "rows": "0"})
 
     # Query 2: Exact Search
-    solr_search("\"Star Wars: Episode V - The Empire Strikes Back\"", **{
+    solr_search("title: \"Star Wars: Episode V - The Empire Strikes Back\"", **{
         "defType": "lucene",
-        "df": "title",
         "fl": "title score"})
 
     # Query 3: Search Phrase
@@ -166,7 +165,7 @@ def main():
     solr_search("ciborg", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title, score",
+        "fl": "title score",
         "stopwords": "true",
         "rows": "5"})
 
@@ -174,7 +173,7 @@ def main():
     solr_search("droid", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title, score",
+        "fl": "title score",
         "stopwords": "true",
         "rows": "5"})
 
@@ -182,7 +181,15 @@ def main():
     solr_search("scary", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title, score",
+        "fl": "title score",
+        "stopwords": "true",
+        "rows": "5"})
+
+    # 10d: Synonymous Phrases
+    solr_search("lol", **{
+        "defType": "edismax",
+        "qf": "title plot genres",
+        "fl": "title score",
         "stopwords": "true",
         "rows": "5"})
 
