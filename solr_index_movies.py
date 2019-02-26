@@ -16,12 +16,12 @@ data_file = 'data/movieDetails.json'
 
 
 def main():
-    # delete_all_documents()
+    delete_all_documents()
     load_json_file_to_solr()
-    # multi_value_false()
-    # delete_all_documents()
-    # load_json_file_to_solr()
-    # get_document_count()
+    multi_value_false()
+    delete_all_documents()
+    load_json_file_to_solr()
+    get_document_count()
 
 
 def delete_all_documents():
