@@ -16,15 +16,15 @@ data_file = 'data/movieDetails.json'
 
 
 def main():
-    delete_all()
+    # delete_all_documents()
     load_json_file_to_solr()
-    multi_value_false()
-    delete_all()
-    load_json_file_to_solr()
-    get_document_count()
+    # multi_value_false()
+    # delete_all_documents()
+    # load_json_file_to_solr()
+    # get_document_count()
 
 
-def delete_all():
+def delete_all_documents():
     # https://wiki.apache.org/solr/FAQ
     path = '/update'
     headers = {'Content-type': 'text/xml', 'charset': 'utf-8'}
@@ -41,10 +41,18 @@ def delete_all():
 def load_json_file_to_solr():
     with open(data_file) as data:
         json_data = json.load(data)
+        json_data = add_id(json_data)
 
     path = '/update/json/docs?commit=true'
     r = requests.post(solr_url + '/' + solr_collection + path, json=json_data)
     print('Bulk add all documents: ', r.status_code, r.reason)
+
+
+# Add Solr ID field by copying MongoDB ID field
+def add_id(json_data):
+    for document in json_data:
+        document['id'] = document['_id']['$oid']
+    return json_data
 
 
 def multi_value_false():

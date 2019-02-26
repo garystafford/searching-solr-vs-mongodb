@@ -42,7 +42,8 @@ scary,slasher,spooky,evil,horror
 droid => droid,android,robot,cyborg
 
 # Jargon
-ai, artificial intelligence
+ai,artificial intelligence
+ml,machine learning
 cia,central intelligence agency
 fbi,federal bureau investigation
 lol,laughing out loud,league legends

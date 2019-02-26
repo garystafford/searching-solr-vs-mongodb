@@ -25,10 +25,22 @@ docker run --name solr -d -p 8983:8983 -v $PWD/conf:/conf solr:latest solr-creat
 
 docker logs solr --follow
 
-# docker run --name solr -p 8983:8983 -d solr:latest solr-create -c movies
-# docker cp solr:/opt/solr/server/solr/movies/conf/ .
-
 # docker exec -it --user=solr solr bin/solr create_core -c movies
+```
+
+Optional: Copy config from Solr container to local path
+
+```bash
+docker run --name solr -p 8983:8983 -d solr:latest solr-create -c movies
+docker cp solr:/opt/solr/server/solr/movies/conf/ .
+```
+
+# SolrCloud Configuration
+
+```bash
+cd /home/ec2-user/solr-7.6.0/server/solr/movies/conf
+cd ~
+solr-7.6.0/bin/solr restart
 ```
 
 Update environment variables with your own values and set
@@ -37,6 +49,7 @@ Update environment variables with your own values and set
 # local docker example
 export SOLR_URL="http://localhost:8983/solr"
 export MONOGDB_CONN="mongodb://localhost:27017/movies"
+
 env | grep 'SOLR_URL\|MONOGDB_CONN'
 ```
 
@@ -55,7 +68,7 @@ Index JSON data to Solr
 python3 ./solr_index_movies.py
 ```
 
-Modify Solr movies schema
+FYI Only: Modify Solr movies schema
 
 ```bash
 curl -X POST \
@@ -85,12 +98,6 @@ Run query scripts
 ```bash
 time python3 ./query_mongo.py
 time python3 ./query_solr.py
-```
-
-# Copy Solr Configs from Container
-
-```bash
-docker cp solr:/opt/solr/server/solr/movies/conf/ .
 ```
 
 ## Output from Solr Searches
