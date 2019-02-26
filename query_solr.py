@@ -16,6 +16,8 @@ solr = pysolr.Solr(solr_url + "/" + solr_collection)
 
 
 def main():
+    print('Target Solr instance: %s' % solr_url)
+
     # Query 1a: All Documents
     solr_search("*:*", **{
         "defType": "lucene",

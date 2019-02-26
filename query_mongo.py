@@ -16,6 +16,8 @@ mongo_collection = mongo_db['movieDetails']
 
 
 def main():
+    print('Target MongoDB instance: %s' % mongodb_conn)
+
     create_indexes()
 
     # Query 1a: All Documents

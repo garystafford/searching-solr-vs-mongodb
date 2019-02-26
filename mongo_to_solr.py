@@ -20,6 +20,9 @@ solr_collection = 'movies'
 
 
 def main():
+    print('Target MongoDB instance: %s' % mongodb_conn)
+    print('Target Solr instance: %s' % solr_url)
+
     get_documents
     add_all()
 

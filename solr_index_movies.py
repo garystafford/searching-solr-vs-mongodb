@@ -16,6 +16,7 @@ data_file = 'data/movieDetails.json'
 
 
 def main():
+    print('Target Solr instance: %s' % solr_url)
     delete_all_documents()
     load_json_file_to_solr()
     multi_value_false()
