@@ -23,8 +23,6 @@ docker run --name mongo -p 27017:27017 -d mongo:latest
 docker run --name solr -d -p 8983:8983 -v $PWD/conf:/conf solr:latest solr-create -c movies -d /conf
 
 docker logs solr --follow
-
-# docker exec -it --user=solr solr bin/solr create_core -c movies
 ```
 
 Optional: Copy config from Solr container to local path
@@ -32,6 +30,12 @@ Optional: Copy config from Solr container to local path
 ```bash
 docker run --name solr -p 8983:8983 -d solr:latest solr-create -c movies
 docker cp solr:/opt/solr/server/solr/movies/conf/ .
+```
+
+Optional: Create your own core in Solr container
+
+```bash
+docker exec -it --user=solr solr bin/solr create_core -c movies
 ```
 
 Update environment variables with your own values and set
