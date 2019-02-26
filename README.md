@@ -1,23 +1,22 @@
 # Searching with Apache Solr
 
-Materials for workshop on comparing searching with Apache Solr versus querying in MongoDB: 'Apache Solr: Because your Database is not a Search Engine'.
+Materials for the post, [Apache Solr: Because your Database is not a Search Engine](https://wp.me/p1RD28-6e9). In this post, we will examine what sets Apache Solr aside from databases, like MongoDB, as a search engine. We will explore the similarities and differences between Solr and MongoDB by analyzing a series of comparative queries. We then delve into some of Solr’s more advanced search capabilities.
 
 Movie data used in demo publicly available from MongoDB: [Setup and Import the Data](https://docs.mongodb.com/charts/master/tutorial/movie-details/prereqs-and-import-data/#download-the-data)
 
 ## Set-up Instructions
 
-Assuming you have an existing MongoDB and Solr instances:
+More detailed set-up instructions are in the post, [Apache Solr: Because your Database is not a Search Engine](https://wp.me/p1RD28-6e9).
 
 -   Create MongoDB and Solr Docker containers (commands below)
 -   Set (2) environment variables (commands below)
 -   Import JSON data to MongoDB (command below)
 -   Index JSON data to Solr (command below)
--   Run curl command to modify Solr schema (command below)
 -   Run `query_mongo.py` and `query_solr.py` query scripts
 
 ## Useful Commands
 
-Create MongoDB and Solr Docker containers
+Create MongoDB and Solr Docker containers. Solr container bind-mounts config directory from this project.
 
 ```bash
 docker run --name mongo -p 27017:27017 -d mongo:latest
@@ -33,14 +32,6 @@ Optional: Copy config from Solr container to local path
 ```bash
 docker run --name solr -p 8983:8983 -d solr:latest solr-create -c movies
 docker cp solr:/opt/solr/server/solr/movies/conf/ .
-```
-
-# SolrCloud Configuration
-
-```bash
-cd /home/ec2-user/solr-7.6.0/server/solr/movies/conf
-cd ~
-solr-7.6.0/bin/solr restart
 ```
 
 Update environment variables with your own values and set
