@@ -199,7 +199,7 @@ def main():
     # Query 11: Faceting
     get_facets("adventure action +western -romance", **{
         "defType": "edismax",
-        "omitHeader":"false",
+        "omitHeader": "true",
         "qf": "title plot genres",
         "fl": "title, genres, score",
         "facet": "on",
@@ -318,7 +318,8 @@ def get_facets(q, **kwargs):
     print("\nResults\n----------")
     print("document count: %s" % results.hits)
     print("qtime (ms): %s" % results.qtime)
-    print(json.dumps(results.facets, indent=2))
+    # print("Facets: %s" % json.dumps(results.facets, indent=2))
+    print("Facets: %s" % results.facets)
 
 
 # TODO: Fix - MLT Query Parser function not working
