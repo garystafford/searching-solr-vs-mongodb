@@ -6,6 +6,7 @@
 # purpose: Perform searches against a Solr index
 # usage: python3 ./query_solr.py
 
+import json
 import pysolr
 import os
 from bson.json_util import dumps
@@ -21,7 +22,7 @@ def main():
     # Query 1a: All Documents
     solr_search("*:*", **{
         "defType": "lucene",
-        "fl": "title score",
+        "fl": "*, score",
         "sort": "title asc",
         "rows": "5"})
 
@@ -40,14 +41,14 @@ def main():
     solr_search("\"star wars\"", **{
         "defType": "lucene",
         "df": "title",
-        "fl": "title score"})
+        "fl": "title, score"})
 
     # Query 4: Search Terms
     solr_search("star wars", **{
         "defType": "lucene",
         "fq": "countries: USA",
         "df": "title",
-        "fl": "title score",
+        "fl": "title, score",
         "rows": "5"})
 
     # Query 5a: Multiple Search Terms
@@ -55,7 +56,7 @@ def main():
         "defType": "lucene",
         "fq": "countries: USA",
         "df": "genres",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 5b: Required Search Term
@@ -63,7 +64,7 @@ def main():
         "defType": "lucene",
         "fq": "countries: USA",
         "df": "genres",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 6a: eDisMax Query
@@ -71,7 +72,7 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title genres",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 6b: eDisMax Boosted Fields
@@ -79,7 +80,7 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title^2.0 genres^4.0",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 6c: eDisMax Boosted with Required/Prohibited Terms
@@ -87,7 +88,7 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title^2.0 genres^4.0",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 6d: eDisMax w/ Required/Prohibited Terms, w/o Boost
@@ -95,7 +96,7 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title genres",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 7a: The Movie Dilemma
@@ -103,7 +104,7 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title genres",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "10"})
 
     # Query 7b: Stop Words (simulation)
@@ -111,7 +112,7 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title genres",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "10"})
 
     # Query 7c: Negative Boost
@@ -120,7 +121,7 @@ def main():
         "fq": "countries: USA",
         "qf": "plot title genres",
         "bq": "title:movie^-2.0",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "10"})
 
     # Query 8: Boost Function
@@ -128,14 +129,14 @@ def main():
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title genres",
-        "fl": "title awards.wins score",
+        "fl": "title, awards.wins, score",
         "rows": "5"})
 
     solr_search("adventure action +western -romance", **{
         "defType": "edismax",
         "fq": "countries: USA",
         "qf": "plot title genres",
-        "fl": "title awards.wins score",
+        "fl": "title, awards.wins, score",
         "boost": "div(field(awards.wins,min),2)",
         "rows": "5"})
 
@@ -147,7 +148,7 @@ def main():
     solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
         "defType": "lucene",
         "fq": "countries: USA",
-        "fl": "title genres score",
+        "fl": "title, genres, score",
         "rows": "5"})
 
     # Query 9b: The Problem with George
@@ -160,14 +161,14 @@ def main():
     solr_search("{!mlt qf=\"%s\" mintf=1 mindf=1}%s" % (mlt_qf, mlt_id), **{
         "defType": "lucene",
         "fq": "countries: USA",
-        "fl": "title actors director writers score",
+        "fl": "title, actors, director, writers, score",
         "rows": "10"})
 
     # Query 10a: Replacement Synonyms
     solr_search("ciborg", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title score",
+        "fl": "title, score",
         "stopwords": "true",
         "rows": "5"})
 
@@ -175,7 +176,7 @@ def main():
     solr_search("droid", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title score",
+        "fl": "title, score",
         "stopwords": "true",
         "rows": "5"})
 
@@ -183,7 +184,7 @@ def main():
     solr_search("scary", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title score",
+        "fl": "title, score",
         "stopwords": "true",
         "rows": "5"})
 
@@ -191,16 +192,28 @@ def main():
     solr_search("lol", **{
         "defType": "edismax",
         "qf": "title plot genres",
-        "fl": "title score",
+        "fl": "title, score",
         "stopwords": "true",
         "rows": "5"})
+
+    # Query 11: Faceting
+    solr_search("adventure action +western -romance", **{
+        "defType": "edismax",
+        "omitHeader":"false",
+        "qf": "title plot genres",
+        "fl": "title, genres, score",
+        "facet": "on",
+        "facet.field": "genres",
+        "facet.mincount": "1",
+        "facet.sort": "genres",
+        "rows": "0"})
 
     # # Additional Unused Query Variations
     # # eDisMax - Basic example, multiple search terms
     # solr_search("actors:\"John Wayne\" AND western action adventure", **{
     #     "defType": "edismax",
     #     "qf": "plot title genres actors director",
-    #     "fl": "id plot title genres actors director score",
+    #     "fl": "id, plot, title, genres, actors, director, score",
     #     "rows": "5"})
     #
     # solr_search("western action adventure with John Wayne", **{
@@ -272,6 +285,7 @@ def solr_search(q, **kwargs):
     for document in results.docs:
         if 'score' in document:
             document['score'] = round(document['score'], 2)
+        # print(json.dumps(document, indent=2, sort_keys=True)) # json pretty print
         print(document)
 
 
