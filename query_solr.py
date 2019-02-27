@@ -197,7 +197,7 @@ def main():
         "rows": "5"})
 
     # Query 11: Faceting
-    solr_search("adventure action +western -romance", **{
+    get_facets("adventure action +western -romance", **{
         "defType": "edismax",
         "omitHeader":"false",
         "qf": "title plot genres",
@@ -306,6 +306,19 @@ def get_movie_id(title):
     print("id: %s " % movie_id)
 
     return movie_id
+
+
+def get_facets(q, **kwargs):
+    results = solr.search(q, **kwargs)
+
+    print("----------\n")
+    print("Parameters\n----------")
+    print("q: %s" % q)
+    print("kwargs: %s" % kwargs)
+    print("\nResults\n----------")
+    print("document count: %s" % results.hits)
+    print("qtime (ms): %s" % results.qtime)
+    print(json.dumps(results.facets, indent=2))
 
 
 # TODO: Fix - MLT Query Parser function not working
